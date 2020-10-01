@@ -46,7 +46,6 @@ public class PersonController {
             person.setName(personRequest.getName());
             person.setEmail(personRequest.getEmail());
             person.setHash(personRequest.getHash());
-            person.setPolls(personRequest.getPolls());
             person.setRoles(personRequest.getRoles());
             return personRepository.save(person);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));

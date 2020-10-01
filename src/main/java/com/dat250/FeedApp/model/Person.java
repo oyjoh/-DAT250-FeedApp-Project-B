@@ -18,6 +18,7 @@ public class Person extends AuditModel{
 
     @Column(unique=true)
     private String name;
+
     private String email;
     private String hash;
 
@@ -25,9 +26,6 @@ public class Person extends AuditModel{
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "userId"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
-    @OneToMany(mappedBy = "person", orphanRemoval = true)
-    private List<Poll> polls = new ArrayList<>();
 
     public boolean isAdmin(){ return roles.contains(Role.ADMIN); }
     public boolean isUser(){ return roles.contains(Role.USER); }

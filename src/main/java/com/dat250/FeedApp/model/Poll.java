@@ -2,6 +2,8 @@ package com.dat250.FeedApp.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,11 +21,9 @@ public class Poll extends AuditModel{
     private String joinKey;
     private Boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "userId", nullable = false)
     private Person person;
-
-    @OneToMany(mappedBy = "poll", orphanRemoval = true)
-    private List<Entry> entries = new ArrayList<>();
 
     protected Poll() {}
 }
