@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> {
-
     List<Poll> getAllByPerson(Person person);
 
 }
