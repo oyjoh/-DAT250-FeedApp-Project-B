@@ -305,3 +305,6 @@ target
 
 # database
 database/
+
+# maven
+.mvn/
