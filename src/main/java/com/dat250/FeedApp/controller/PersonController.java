@@ -3,6 +3,7 @@ package com.dat250.FeedApp.controller;
 
 import com.dat250.FeedApp.model.Person;
 import com.dat250.FeedApp.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 public class PersonController {
 
+    @Autowired
     private PersonRepository personRepository;
 
     @GetMapping("/people")
