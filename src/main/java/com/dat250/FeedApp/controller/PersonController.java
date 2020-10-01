@@ -22,6 +22,12 @@ public class PersonController {
         return personRepository.findAll();
     }
 
+    @GetMapping("/people/{personId}")
+    public Person getPerson(@PathVariable Long personId){
+        return personRepository.findById(personId)
+                .orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
+    }
+
     @PostMapping("/people")
     public Person createPerson(@Validated @RequestBody Person person){
         return personRepository.save(person);
