@@ -28,6 +28,9 @@ public class Person extends AuditModel{
     @OneToMany(mappedBy = "person", orphanRemoval = true)
     private List<Poll> polls = new ArrayList<>();
 
+    public boolean isAdmin(){ return roles.contains(Role.ADMIN); }
+    public boolean isUser(){ return roles.contains(Role.USER); }
+
     public String toString() {
         return "id: " + userId + ", name = " + name;
     }
