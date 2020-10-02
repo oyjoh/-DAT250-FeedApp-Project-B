@@ -53,7 +53,7 @@ public class PollController {
     }
 
     @PostMapping("/people/{personId}/polls")
-    public Poll createPoll(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll){
+    public Poll getAPollFromAPerson(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll){
         return personRepository.findById(personId).map(person -> {
             poll.setPerson(person);
             return pollRepository.save(poll);
