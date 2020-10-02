@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> {
-    List<Poll> findByPersonUserId(Long personId);
+    List<Poll> getAllByIsPublic(Boolean isPublic);
+    List<Poll> findByPerson(Person person);
+
+    //List<Poll> findByPersonUserId(Long personId);
 
 }

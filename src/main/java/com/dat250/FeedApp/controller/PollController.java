@@ -1,5 +1,6 @@
 package com.dat250.FeedApp.controller;
 
+import com.dat250.FeedApp.model.Person;
 import com.dat250.FeedApp.model.Poll;
 import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,14 +21,25 @@ public class PollController {
     @Autowired
     private PersonRepository personRepository;
 
-    @GetMapping("/polls")
-    public List<Poll> getAllPolls(){
+    @GetMapping("/polls")//Skikkelig Workaround, må finne ut hvorfor det ikke funker
+    public String getAllPolls(){
+        StringBuilder stringBuilder = new StringBuilder();
+        pollRepository.findAll().forEach(elem -> {
+            stringBuilder.append(elem.toString()).append("\n");
+        });
+        return stringBuilder.toString();
+    }
+
+    @GetMapping("/testGetAllPolls")
+    public List<Poll> getAllPolls2() {
         return pollRepository.findAll();
     }
 
     @GetMapping("/people/{personId}/polls")
-    public List<Poll> getAllPollsFromPerson(@PathVariable (value = "personId") Long personId){
-        return pollRepository.findByPersonUserId(personId);
+    public List<Poll> getAllPollsFromPerson(@PathVariable (value = "personId") Long personId) {
+        return personRepository.findById(personId).map(person ->
+                pollRepository.findByPerson(person))
+                .orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
 
     @PostMapping("/people/{personId}/polls")
@@ -37,17 +50,14 @@ public class PollController {
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
 
-    /*
     @PutMapping("/person/{personId}/poll/{pollId}")
-    public Poll updatePoll(@PathVariable Long pollId, @Validated @RequestBody Poll pollRequest){
+    public Poll updatePoll(@PathVariable Long pollId, @Validated @RequestBody Poll pollRequest, @PathVariable String personId){
         return pollRepository.findById(pollId).map(poll -> {
             poll.setSummary(pollRequest.getSummary());
             poll.setIsPublic(pollRequest.getIsPublic());
-            poll.setEntries(pollRequest.getEntries());
             return pollRepository.save(poll);
         }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
-     */
 
     @DeleteMapping("/poll/{pollId}")
     public ResponseEntity<?> deletePoll(@PathVariable Long pollId){

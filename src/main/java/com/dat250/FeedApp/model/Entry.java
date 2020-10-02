@@ -24,4 +24,21 @@ public class Entry extends AuditModel{
     private Person person;
 
     protected Entry() {}
+
+    public static Entry from(Entry entry, Person person, Poll poll) {
+        Entry newEntry = new Entry();
+        newEntry.setPoll(poll);
+        newEntry.setPerson(person);
+        newEntry.setValue(entry.getValue());
+        newEntry.setNumber(entry.getNumber());
+        return newEntry;
+    }
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "value=" + value +
+                ", number=" + number +
+                '}';
+    }
 }

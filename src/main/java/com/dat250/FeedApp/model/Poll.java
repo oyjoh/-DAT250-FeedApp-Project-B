@@ -25,5 +25,15 @@ public class Poll extends AuditModel{
     @JoinColumn(name = "userId", nullable = false)
     private Person person;
 
+    @Override
+    public String toString() {
+        return "Poll{" +
+                "pollId=" + pollId +
+                ", summary='" + summary + '\'' +
+                ", joinKey='" + joinKey + '\'' +
+                ", isPublic=" + isPublic +
+                '}';
+    }
+
     protected Poll() {}
 }
