@@ -12,7 +12,7 @@ import java.util.Set;
 public class Person extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long personId;
 
     @Column(unique=true)
     private String name;
@@ -21,7 +21,7 @@ public class Person extends AuditModel{
     private String hash;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "userId"))
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "personId"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
@@ -30,7 +30,7 @@ public class Person extends AuditModel{
 
     public String toString() {
         return "{" +
-                "\"personId\": " + userId + "," +
+                "\"personId\": " + personId + "," +
                 "\"name\": " + "\"" + name + "\"" +
                 "}";
     }

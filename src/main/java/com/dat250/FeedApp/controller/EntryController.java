@@ -8,54 +8,52 @@ import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.GeneratedValue;
 import java.util.List;
 
 @RestController
 public class EntryController {
 
+    private final EntryRepository entryRepository;
+    private final PollRepository pollRepository;
+    private final PersonRepository personRepository;
+
     @Autowired
-    private EntryRepository entryRepository;
-    @Autowired
-    private PollRepository pollRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    public EntryController(EntryRepository entryRepository, PollRepository pollRepository, PersonRepository personRepository){
+        this.entryRepository = entryRepository;
+        this.pollRepository = pollRepository;
+        this.personRepository = personRepository;
+    }
 
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
     }
 
-    @GetMapping("/poll/{pollId}/entries")
+    @GetMapping("/polls/{pollId}/entries")
     public List<Entry> getEntries(@PathVariable Long pollId) {
-        return pollRepository.findById(pollId).map(poll -> entryRepository.findByPoll(poll))
+        return pollRepository.findById(pollId).map(entryRepository::findByPoll)
                 .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
 
-    @PostMapping("/poll/{pollId}/entry")
+    @PostMapping("/polls/{pollId}/entry")
     public Entry createNewEntry(@RequestParam Long personId, @PathVariable Long pollId, @Validated @RequestBody Entry entry) {
         Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
-        System.out.println(person);
-        System.out.println(poll);
-        System.out.println(Entry.from(entry, person, poll));
         return entryRepository.save(Entry.from(entry, person, poll));
     }
 
-
-    @PutMapping("/entry/{entryId}")
-    public Entry updatePoll(@PathVariable Long entryId, @Validated @RequestBody Entry entryRequest) {
-        return entryRepository.findById(entryId).map(entry -> {
-            //entry.setNumber(entryRequest.getNumber());
+    @PutMapping("/polls/{pollId}/entry/{entryId}")
+    public Entry updateEntry(@PathVariable Long pollId, @PathVariable Long entryId, @Validated @RequestBody Entry entryRequest) {
+        Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+        return entryRepository.findByEntryIdAndPoll(entryId, poll).map(entry -> {
             entry.setValue(entryRequest.getValue());
+            entry.setNumber(entryRequest.getNumber());
             return entryRepository.save(entry);
-        }).orElseThrow(() -> new ResourceNotFoundException("EntryId: " + entryId + " not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("EntryId: " + entryId + " not found in Poll: " + pollId));
     }
 
     @DeleteMapping("/entry/{entryId}")

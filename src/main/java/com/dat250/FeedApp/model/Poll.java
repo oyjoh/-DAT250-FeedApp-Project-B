@@ -1,19 +1,17 @@
 package com.dat250.FeedApp.model;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-public class Poll extends AuditModel{
+public class Poll extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pollId;
@@ -23,7 +21,9 @@ public class Poll extends AuditModel{
     private Boolean isPublic;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "userId", nullable = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "personId")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name = "personId_poll", nullable = false)
     private Person person;
 
 
@@ -39,5 +39,6 @@ public class Poll extends AuditModel{
                 "}";
     }
 
-    protected Poll() {}
+    protected Poll() {
+    }
 }

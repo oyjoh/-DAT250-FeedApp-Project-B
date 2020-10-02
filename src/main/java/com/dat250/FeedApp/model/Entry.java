@@ -1,5 +1,8 @@
 package com.dat250.FeedApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +21,15 @@ public class Entry extends AuditModel{
     private Integer number;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "pollId")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name = "pollId_entry")
     private Poll poll;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "personId")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name = "personId_entry")
     private Person person;
 
     protected Entry() {}

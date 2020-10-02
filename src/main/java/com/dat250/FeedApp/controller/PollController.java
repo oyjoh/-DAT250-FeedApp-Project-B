@@ -6,31 +6,35 @@ import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class PollController {
 
-    @Autowired
-    private PollRepository pollRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    private final PollRepository pollRepository;
+    private final PersonRepository personRepository;
 
-    @GetMapping("/polls") //Can set ?isPublic=false to see all poll, not just public ones
-    public List<Poll> getAllPollsThatArePublic(@RequestParam(defaultValue = "true", required=false) String isPublic) {
-        return pollRepository.getAllByIsPublic(Boolean.parseBoolean(isPublic));
+    @Autowired
+    public PollController(PollRepository pollRepository, PersonRepository personRepository){
+        this.pollRepository = pollRepository;
+        this.personRepository = personRepository;
+    }
+
+    @GetMapping("/polls")
+    public List<Poll> getAllPollsThatArePublic(@RequestParam(defaultValue = "public", required=false) String show) {
+        if(show.equals("all")) return pollRepository.findAll(); //?show=all Shows all polls
+        return pollRepository.getAllByIsPublic(show.equals("public")); //?show=public //?show=hidden shows public/non-public polls
     }
 
     @GetMapping("/people/{personId}/polls")
     public List<Poll> getAllPollsFromPerson(@PathVariable (value = "personId") Long personId) {
-        return personRepository.findById(personId).map(person ->
-                pollRepository.findByPerson(person))
+        return personRepository.findById(personId).map(pollRepository::findByPerson)
                 .orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
 
@@ -42,13 +46,16 @@ public class PollController {
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
 
-    @PutMapping("/person/{personId}/poll/{pollId}")
-    public Poll updatePoll(@PathVariable Long pollId, @Validated @RequestBody Poll pollRequest, @PathVariable String personId){
-        return pollRepository.findById(pollId).map(poll -> {
-            poll.setSummary(pollRequest.getSummary());
-            poll.setIsPublic(pollRequest.getIsPublic());
-            return pollRepository.save(poll);
-        }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+
+    @PutMapping("/people/{personId}/poll/{pollId}")
+    public Poll updatePoll(@PathVariable Long personId, @PathVariable Long pollId, @Validated @RequestBody Poll pollRequest){
+        Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
+        Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
+        if(poll.getPerson() != person) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Person: " + person.getName() + " is not the poll Owner");
+
+        poll.setSummary(pollRequest.getSummary());
+        poll.setIsPublic(pollRequest.getIsPublic());
+        return pollRepository.save(poll);
     }
 
     @DeleteMapping("/poll/{pollId}")
