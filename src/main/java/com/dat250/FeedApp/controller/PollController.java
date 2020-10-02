@@ -32,6 +32,20 @@ public class PollController {
         return pollRepository.getAllByIsPublic(show.equals("public")); //?show=public //?show=hidden shows public/non-public polls
     }
 
+    @GetMapping("/polls/{pollId}")
+    public Poll getPollById(@PathVariable Long pollId) {
+        return pollRepository.findById(pollId)
+                .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " notFound"));
+    }
+
+    @GetMapping("/people/{personId}/poll/{pollId}")
+    public Poll updatePoll(@PathVariable Long personId, @PathVariable Long pollId){
+        return pollRepository.findByPollIdAndPersonPersonId(pollId, personId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    }
+
+
+
     @GetMapping("/people/{personId}/polls")
     public List<Poll> getAllPollsFromPerson(@PathVariable (value = "personId") Long personId) {
         return personRepository.findById(personId).map(pollRepository::findByPerson)
