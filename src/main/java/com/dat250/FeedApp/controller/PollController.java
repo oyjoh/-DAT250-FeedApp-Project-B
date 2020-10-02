@@ -6,6 +6,7 @@ import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +22,9 @@ public class PollController {
     @Autowired
     private PersonRepository personRepository;
 
-    @GetMapping("/polls")//Skikkelig Workaround, må finne ut hvorfor det ikke funker
-    public String getAllPolls(){
-        StringBuilder stringBuilder = new StringBuilder();
-        pollRepository.findAll().forEach(elem -> {
-            stringBuilder.append(elem.toString()).append("\n");
-        });
-        return stringBuilder.toString();
-    }
-
-    @GetMapping("/testGetAllPolls")
-    public List<Poll> getAllPolls2() {
-        return pollRepository.findAll();
+    @GetMapping("/polls") //Can set ?isPublic=false to see all poll, not just public ones
+    public List<Poll> getAllPollsThatArePublic(@RequestParam(defaultValue = "true", required=false) String isPublic) {
+        return pollRepository.getAllByIsPublic(Boolean.parseBoolean(isPublic));
     }
 
     @GetMapping("/people/{personId}/polls")

@@ -1,5 +1,6 @@
 package com.dat250.FeedApp.model;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -21,18 +22,21 @@ public class Poll extends AuditModel{
     private String joinKey;
     private Boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId", nullable = false)
     private Person person;
 
+
     @Override
     public String toString() {
-        return "Poll{" +
-                "pollId=" + pollId +
-                ", summary='" + summary + '\'' +
-                ", joinKey='" + joinKey + '\'' +
-                ", isPublic=" + isPublic +
-                '}';
+        return "{" +
+                "\"created_at\": " + "\"" + getCreatedAt().toString() + "\"" + "," +
+                "\"updated_at\": " + "\"" + getUpdatedAt().toString() + "\"" + "," +
+                "\"pollId\": " + pollId + "," +
+                "\"summary\": " + "\"" + summary + "\"" + "," +
+                "\"joinKey\": " + "\"" + joinKey + "\"" + "," +
+                "\"isPublic\": " + isPublic +
+                "}";
     }
 
     protected Poll() {}

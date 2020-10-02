@@ -8,10 +8,13 @@ import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.GeneratedValue;
 import java.util.List;
 
 @RestController
@@ -24,9 +27,15 @@ public class EntryController {
     @Autowired
     private PersonRepository personRepository;
 
-    @GetMapping("/entry")
+    @GetMapping("/entries")
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
+    }
+
+    @GetMapping("/poll/{pollId}/entries")
+    public List<Entry> getEntries(@PathVariable Long pollId) {
+        return pollRepository.findById(pollId).map(poll -> entryRepository.findByPoll(poll))
+                .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
 
     @PostMapping("/poll/{pollId}/entry")
@@ -38,6 +47,7 @@ public class EntryController {
         System.out.println(Entry.from(entry, person, poll));
         return entryRepository.save(Entry.from(entry, person, poll));
     }
+
 
     @PutMapping("/entry/{entryId}")
     public Entry updatePoll(@PathVariable Long entryId, @Validated @RequestBody Entry entryRequest) {

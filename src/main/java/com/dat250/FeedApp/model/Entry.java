@@ -36,9 +36,12 @@ public class Entry extends AuditModel{
 
     @Override
     public String toString() {
-        return "Entry{" +
-                "value=" + value +
-                ", number=" + number +
+        return "{" +
+                "\"entryId\": " + entryId + "," +
+                "\"value\": \"" + value + "\"," +
+                "\"number\": " + number + "," +
+                "\"poll\": " + poll + "," +
+                "\"person\":" + person +
                 '}';
     }
 }

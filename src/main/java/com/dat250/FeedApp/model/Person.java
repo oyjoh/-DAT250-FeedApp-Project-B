@@ -29,7 +29,10 @@ public class Person extends AuditModel{
     public boolean isUser(){ return roles.contains(Role.USER); }
 
     public String toString() {
-        return "id: " + userId + ", name = " + name;
+        return "{" +
+                "\"personId\": " + userId + "," +
+                "\"name\": " + "\"" + name + "\"" +
+                "}";
     }
 
     public Person() {}
