@@ -1,5 +1,6 @@
 package com.dat250.FeedApp.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@JsonFilter("SimpleEntryFilter")
 public class Entry extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +35,14 @@ public class Entry extends AuditModel{
     private Person person;
 
     protected Entry() {}
+
+    public static Entry simpleEntry(Entry entry){
+        Entry newEntry = new Entry();
+        newEntry.setValue(entry.getValue());
+        newEntry.setNumber(entry.getNumber());
+        newEntry.setCreatedAt(entry.getCreatedAt());
+        return newEntry;
+    }
 
     public static Entry from(Entry entry, Person person, Poll poll) {
         Entry newEntry = new Entry();

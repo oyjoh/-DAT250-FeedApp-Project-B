@@ -41,7 +41,7 @@ public class PersonController {
     @PostMapping("/people")
     public Person createPerson(@Validated @RequestBody Person person) {
         try{
-            person.setName(encryptPassword(person.getName()));
+            person.setHash(encryptPassword(person.getName()));
             return personRepository.save(person);
         } catch (DataIntegrityViolationException e){
             System.out.println("Person: " + person + " already exists");

@@ -6,13 +6,21 @@ import com.dat250.FeedApp.model.Poll;
 import com.dat250.FeedApp.repository.EntryRepository;
 import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EntryController {
@@ -37,6 +45,18 @@ public class EntryController {
     public List<Entry> getEntries(@PathVariable Long pollId) {
         return pollRepository.findById(pollId).map(entryRepository::findByPoll)
                 .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+    }
+
+    @GetMapping("/polls/{pollId}/simpleEntries")
+    public MappingJacksonValue getSimpleEntries(@PathVariable Long pollId) {
+        return pollRepository.findById(pollId).map(poll -> {
+            List<Entry> entries = entryRepository.findByPoll(poll);
+            SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("value", "number", "createdAt");
+            FilterProvider filters = new SimpleFilterProvider().addFilter("SimpleEntryFilter", filter);
+            MappingJacksonValue mapping = new MappingJacksonValue(entries);
+            mapping.setFilters(filters);
+            return mapping;
+        }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
 
     @PostMapping("/polls/{pollId}/entry")
