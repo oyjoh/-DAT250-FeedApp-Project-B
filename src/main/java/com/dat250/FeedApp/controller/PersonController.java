@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import com.lambdaworks.crypto.SCryptUtil;
+
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class PersonController {
     @PostMapping("/people")
     public Person createPerson(@Validated @RequestBody Person person) {
         try{
+            person.setName(encryptPassword(person.getName()));
             return personRepository.save(person);
         } catch (DataIntegrityViolationException e){
             System.out.println("Person: " + person + " already exists");
@@ -49,12 +52,17 @@ public class PersonController {
     @PutMapping("/people/{personId}")
     public Person updatePerson(@PathVariable Long personId, @Validated @RequestBody Person personRequest) {
         return personRepository.findById(personId).map(person -> {
-            person.setName(personRequest.getName());
-            person.setEmail(personRequest.getEmail());
-            person.setHash(personRequest.getHash());
-            person.setRoles(personRequest.getRoles());
+            if(personRequest.getName() != null) person.setName(personRequest.getName());
+            if(personRequest.getEmail() != null) person.setEmail(personRequest.getEmail());
+            if(personRequest.getHash() != null) person.setHash(encryptPassword(personRequest.getHash()));
+            if(personRequest.getRoles() != null) person.setRoles(personRequest.getRoles());
             return personRepository.save(person);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
+    }
+
+    private String encryptPassword(String password){
+        int N = 16384, r = 8, p = 1;
+        return SCryptUtil.scrypt(password, N, r, p);
     }
 
     @DeleteMapping("/people/{personId}")

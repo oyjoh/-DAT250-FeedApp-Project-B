@@ -44,8 +44,6 @@ public class PollController {
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     }
 
-
-
     @GetMapping("/people/{personId}/polls")
     public List<Poll> getAllPollsFromPerson(@PathVariable (value = "personId") Long personId) {
         return personRepository.findById(personId).map(pollRepository::findByPerson)
@@ -60,15 +58,14 @@ public class PollController {
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
 
-
     @PutMapping("/people/{personId}/poll/{pollId}")
     public Poll updatePoll(@PathVariable Long personId, @PathVariable Long pollId, @Validated @RequestBody Poll pollRequest){
         Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
+        //TODO there should be a test to see if the person making the change is the owner OR and ADMIN
         if(poll.getPerson() != person) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Person: " + person.getName() + " is not the poll Owner");
-
-        poll.setSummary(pollRequest.getSummary());
-        poll.setIsPublic(pollRequest.getIsPublic());
+        if(pollRequest.getSummary() != null) poll.setSummary(pollRequest.getSummary());
+        if(pollRequest.getIsPublic() != null) poll.setIsPublic(pollRequest.getIsPublic());
         return pollRepository.save(poll);
     }
 

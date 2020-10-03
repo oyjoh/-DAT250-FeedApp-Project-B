@@ -50,8 +50,8 @@ public class EntryController {
     public Entry updateEntry(@PathVariable Long pollId, @PathVariable Long entryId, @Validated @RequestBody Entry entryRequest) {
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
         return entryRepository.findByEntryIdAndPoll(entryId, poll).map(entry -> {
-            entry.setValue(entryRequest.getValue());
-            entry.setNumber(entryRequest.getNumber());
+            if(entryRequest.getValue() != null) entry.setValue(entryRequest.getValue());
+            if(entryRequest.getNumber() != null) entry.setNumber(entryRequest.getNumber());
             return entryRepository.save(entry);
         }).orElseThrow(() -> new ResourceNotFoundException("EntryId: " + entryId + " not found in Poll: " + pollId));
     }
