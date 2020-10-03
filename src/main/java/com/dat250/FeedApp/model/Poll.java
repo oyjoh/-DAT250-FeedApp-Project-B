@@ -17,7 +17,13 @@ public class Poll extends AuditModel {
     private Long pollId;
 
     private String summary;
-    private String joinKey;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "joinkey_id", referencedColumnName = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "key")
+    @JsonIdentityReference(alwaysAsId = true)
+    private JoinKey joinKey;
+
     private Boolean isPublic;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
