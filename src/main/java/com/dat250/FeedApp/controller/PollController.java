@@ -63,6 +63,7 @@ public class PollController {
     }
 
     @PostMapping("/people/{personId}/polls")
+    @ResponseStatus(HttpStatus.CREATED)
     public Poll getAPollFromAPerson(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll) {
         return personRepository.findById(personId).map(person -> {
             JoinKey joinKey = createNewJoinKey();
