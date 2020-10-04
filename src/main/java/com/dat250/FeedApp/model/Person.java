@@ -1,9 +1,11 @@
 package com.dat250.FeedApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +20,12 @@ public class Person extends AuditModel{
     private String name;
 
     private String email;
+
+    @JsonIgnore
     private String hash;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Poll> polls;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "personId"))

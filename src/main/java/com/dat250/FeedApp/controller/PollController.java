@@ -88,7 +88,7 @@ public class PollController {
         return joinKey;
     }
 
-    @PutMapping("/people/{personId}/poll/{pollId}")
+    @PutMapping("/people/{personId}/polls/{pollId}")
     public Poll updatePoll(@PathVariable Long personId, @PathVariable Long pollId, @Validated @RequestBody Poll pollRequest) {
         Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
@@ -100,7 +100,7 @@ public class PollController {
         return pollRepository.save(poll);
     }
 
-    @DeleteMapping("/poll/{pollId}")
+    @DeleteMapping("/polls/{pollId}")
     public ResponseEntity<?> deletePoll(@PathVariable Long pollId) {
         return pollRepository.findById(pollId).map(poll -> {
             pollRepository.delete(poll);

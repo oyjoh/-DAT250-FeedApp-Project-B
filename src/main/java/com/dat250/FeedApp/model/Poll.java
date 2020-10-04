@@ -26,7 +26,7 @@ public class Poll extends AuditModel {
 
     private Boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "personId")
     @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "personId_poll", nullable = false)
