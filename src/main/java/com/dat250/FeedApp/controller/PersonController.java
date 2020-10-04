@@ -39,6 +39,7 @@ public class PersonController {
     }
 
     @PostMapping("/people")
+    @ResponseStatus(HttpStatus.CREATED)
     public Person createPerson(@Validated @RequestBody Person person) {
         try{
             person.setHash(encryptPassword(person.getName()));
