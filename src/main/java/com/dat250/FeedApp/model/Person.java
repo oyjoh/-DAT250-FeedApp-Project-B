@@ -24,13 +24,16 @@ public class Person extends AuditModel{
     @JsonIgnore
     private String hash;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Poll> polls;
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "personId"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Poll> polls;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Poll> entries;
 
     public boolean isAdmin(){ return roles.contains(Role.ADMIN); }
     public boolean isUser(){ return roles.contains(Role.USER); }

@@ -2,11 +2,13 @@ package com.dat250.FeedApp.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +33,10 @@ public class Poll extends AuditModel {
     @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "personId_poll", nullable = false)
     private Person person;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Entry> entries;
 
 
     @Override
