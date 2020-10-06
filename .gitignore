@@ -308,3 +308,6 @@ database/
 
 # maven
 .mvn/
+
+# Target folder
+target/
