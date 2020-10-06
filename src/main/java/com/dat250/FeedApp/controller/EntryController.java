@@ -6,11 +6,7 @@ import com.dat250.FeedApp.model.Poll;
 import com.dat250.FeedApp.repository.EntryRepository;
 import com.dat250.FeedApp.repository.PersonRepository;
 import com.dat250.FeedApp.repository.PollRepository;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -45,11 +39,7 @@ public class EntryController {
 
     @GetMapping("/polls/{pollId}/entries")
     public List<Entry> getEntries(@PathVariable Long pollId) {
-        return pollRepository.findById(pollId).map(poll -> {
-            SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.serializeAll();
-            FilterProvider filters = new SimpleFilterProvider().addFilter("SimpleEntryFilter", filter);
-            return entryRepository.findByPoll(poll);
-        })
+        return pollRepository.findById(pollId).map(entryRepository::findByPoll)
                 .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
 
