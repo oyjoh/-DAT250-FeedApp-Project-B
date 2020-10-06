@@ -1,0 +1,736 @@
+{
+	"info": {
+		"_postman_id": "f9dd3acc-00e2-4e35-bb69-dfb3ef1df916",
+		"name": "FeedApp",
+		"description": "Collection for testing/demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "General",
+			"item": [
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "895291eb-7295-4a63-83a9-ca99a5e7252f",
+								"exec": [
+									"pm.test(\"Status code is 200, API is running\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						},
+						"description": "Check if API is running"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "create person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0722075c-44a7-4d72-b14b-317c587eb5b9",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set('person_id', jsonData.personId);",
+									"",
+									"pm.test('Created user: ' + jsonData.name, function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test('Person id: ' + jsonData.personId, function (){",
+									"    return jsonData.personId;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d11833cd-9063-4d1d-99fa-e8e69c3b64eb",
+								"exec": [
+									"let date = Date.now();",
+									"pm.environment.set('name_unique', pm.environment.get('name') + date);",
+									"pm.environment.set('email', pm.environment.get('name_unique') + '@gmail.com')"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{name_unique}}\",\n    \"email\": \"{{email}}\",\n    \"hash\": \"password123\",\n    \"roles\": [\"USER\", \"ADMIN\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/people",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people"
+							]
+						},
+						"description": "posting a person"
+					},
+					"response": []
+				},
+				{
+					"name": "get person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6805babb-ccb7-472d-9762-66e419e009e2",
+								"exec": [
+									"pm.test(\"GET user with id: \" + pm.environment.get('person_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "09df755b-d43b-4ac3-b904-d0d627196b01",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update person",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bc7596b6-cfc9-49bc-b22e-32f28447048b",
+								"exec": [
+									"let date = Date.now();",
+									"pm.environment.set('name_unique', pm.environment.get('name') + date);",
+									"pm.environment.set('email', pm.environment.get('name_unique') + '@gmail.com')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fa248d6-7401-4c3c-bb48-ae490a2bcc42",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set('person_id', jsonData.personId);",
+									"",
+									"pm.test('Updated user: ' + jsonData.name, function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Person id: ' + jsonData.personId, function (){",
+									"    return jsonData.personId;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{name_unique}}\",\n    \"email\": \"{{email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all people",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a4cd0bf-c9e4-45b7-86b5-da369cb061ae",
+								"exec": [
+									"pm.test(\"Get all people\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/people",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people"
+							]
+						},
+						"description": "testing, accessing person in perpson"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Poll",
+			"item": [
+				{
+					"name": "poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c1792f5b-bcf7-4ecf-a359-ee204be4c80d",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set('poll_id', jsonData.pollId);",
+									"",
+									"pm.test(\"Created poll\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test('Poll id: ' + jsonData.pollId + ', joinKey: ' + jsonData.joinKey, function () {",
+									"    return jsonData.pollId, jsonData.joinKey;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"summary\": \"example summary\",\n    \"isPublic\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}/polls/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}",
+								"polls",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e9218b3-f4ef-4f82-986d-f288d70ba72b",
+								"exec": [
+									"pm.test(\"Get poll with id: \" + pm.environment.get('poll_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls/{{poll_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}"
+							]
+						},
+						"description": "Get public polls"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPolls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "678688e5-7e6a-42c9-aadb-da1a318680e3",
+								"exec": [
+									"pm.test(\"Get all polls\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls?show=all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							],
+							"query": [
+								{
+									"key": "show",
+									"value": "all"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all Polls by Person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e6769fe9-98fd-4884-acf0-4e566a952b37",
+								"exec": [
+									"pm.test(\"Get all polls from person with id: \" + pm.environment.get('person_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}/polls",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}",
+								"polls"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllNonPublic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fd77476e-f7fa-46cd-882f-c075ec737f26",
+								"exec": [
+									"pm.test(\"Get all non-public polls\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls?show=hidden",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							],
+							"query": [
+								{
+									"key": "show",
+									"value": "hidden"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Entry",
+			"item": [
+				{
+					"name": "entry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b7d6d790-d204-4e04-abc4-fc1e1fb398cb",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"posted entry with id: \" + jsonData.entryId, function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"NO\",\n    \"number\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/polls/{{poll_id}}/entry?personId={{person_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}",
+								"entry"
+							],
+							"query": [
+								{
+									"key": "personId",
+									"value": "{{person_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all Entries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "210b0582-d848-41e1-abeb-f3d9061464df",
+								"exec": [
+									"pm.test(\"Get all entries\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/entries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"entries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all SimpleEntries in Poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9c52eb9-7d26-44ea-9e85-046892dc9e97",
+								"exec": [
+									"pm.test(\"Get all simple entries\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls/{{poll_id}}/simpleEntries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}",
+								"simpleEntries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all Entries in Poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f7fcaec-023d-4aed-81cd-25b15ccbf93d",
+								"exec": [
+									"pm.test(\"Get all entries in poll: \" + pm.environment.get('poll_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls/{{poll_id}}/entries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}",
+								"entries"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "TearDown",
+			"item": [
+				{
+					"name": "delete poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98f06934-6b49-4b4c-8369-8f279f4e7dba",
+								"exec": [
+									"pm.test(\"Poll deleted, id: \" + pm.environment.get('poll_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls/{{poll_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef660dd8-6aa6-4703-8e37-292c0b189522",
+								"exec": [
+									"pm.test(\"Person deleted, id: \" + pm.environment.get('person_id'), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete person should fail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "13ef8262-bc45-4aa0-a4d6-a07743cdbbff",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 404. \" + jsonData.message, function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/people/{{person_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people",
+								"{{person_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "953b1915-1d8a-4aa9-8cb6-2803d4abc73d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4da84408-3ac0-485a-a142-1ec5c96d1b6c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "4bafa575-a21b-4f5b-afb2-31c642fab199",
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
