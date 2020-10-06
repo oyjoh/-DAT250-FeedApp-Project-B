@@ -10,3 +10,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class FeedAppApplication {
     public static void main(String[] args) { SpringApplication.run(FeedAppApplication.class, args); }
 }
+

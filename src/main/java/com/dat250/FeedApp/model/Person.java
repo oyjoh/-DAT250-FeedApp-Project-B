@@ -1,6 +1,9 @@
 package com.dat250.FeedApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,10 +33,14 @@ public class Person extends AuditModel{
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "pollId")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Poll> polls;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Poll> entries;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "entryId")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Entry> entries;
 
     public boolean isAdmin(){ return roles.contains(Role.ADMIN); }
     public boolean isUser(){ return roles.contains(Role.USER); }

@@ -1,6 +1,5 @@
 package com.dat250.FeedApp.controller;
 
-
 import com.dat250.FeedApp.model.Person;
 import com.dat250.FeedApp.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
