@@ -1,84 +1,56 @@
 package com.dat250.FeedApp.controller;
 
 import com.dat250.FeedApp.model.Entry;
-import com.dat250.FeedApp.model.Person;
-import com.dat250.FeedApp.model.Poll;
-import com.dat250.FeedApp.repository.EntryRepository;
-import com.dat250.FeedApp.repository.PersonRepository;
-import com.dat250.FeedApp.repository.PollRepository;
-import com.google.gson.Gson;
+import com.dat250.FeedApp.service.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/api")
 public class EntryController {
 
-    private final EntryRepository entryRepository;
-    private final PollRepository pollRepository;
-    private final PersonRepository personRepository;
+    private final EntryService entryService;
 
     @Autowired
-    public EntryController(EntryRepository entryRepository, PollRepository pollRepository, PersonRepository personRepository) {
-        this.entryRepository = entryRepository;
-        this.pollRepository = pollRepository;
-        this.personRepository = personRepository;
+    public EntryController(EntryService entryService) {
+        this.entryService = entryService;
     }
 
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
-        return entryRepository.findAll();
+        return entryService.getAllEntries();
     }
 
     @GetMapping("/polls/{pollId}/entries")
     public List<Entry> getEntries(@PathVariable Long pollId) {
-        return pollRepository.findById(pollId).map(entryRepository::findByPoll)
-                .orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+        return entryService.getEntries(pollId);
     }
 
     @GetMapping(value = "/polls/{pollId}/simpleEntries", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getSimpleEntries(@PathVariable Long pollId) {
-        return pollRepository.findById(pollId).map(poll -> {
-            List<Entry> simpleEntries = new ArrayList<>();
-            List<Entry> entries = entryRepository.findByPoll(poll);
-            for(Entry entry : entries){
-                simpleEntries.add(Entry.simpleEntry(entry));
-            }
-            return new Gson().toJson(simpleEntries);
-        }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+        return entryService.getSimpleEntries(pollId);
     }
 
     @PostMapping("/polls/{pollId}/entry")
     @ResponseStatus(HttpStatus.CREATED)
     public Entry createNewEntry(@RequestParam Long personId, @PathVariable Long pollId, @Validated @RequestBody Entry entry) {
-        Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
-        Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
-        return entryRepository.save(Entry.from(entry, person, poll));
+        return entryService.createNewEntry(personId, pollId, entry);
     }
 
     @PutMapping("/polls/{pollId}/entry/{entryId}")
     public Entry updateEntry(@PathVariable Long pollId, @PathVariable Long entryId, @Validated @RequestBody Entry entryRequest) {
-        Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
-        return entryRepository.findByEntryIdAndPoll(entryId, poll).map(entry -> {
-            if (entryRequest.getValue() != null) entry.setValue(entryRequest.getValue());
-            if (entryRequest.getNumber() != null) entry.setNumber(entryRequest.getNumber());
-            return entryRepository.save(entry);
-        }).orElseThrow(() -> new ResourceNotFoundException("EntryId: " + entryId + " not found in Poll: " + pollId));
+        return entryService.updateEntry(pollId, entryId, entryRequest);
     }
 
     @DeleteMapping("/entry/{entryId}")
     public ResponseEntity<?> deleteEntry(@PathVariable Long entryId) {
-        return entryRepository.findById(entryId).map(entry -> {
-            entryRepository.delete(entry);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("EntryId: " + entryId + " not found"));
+        return entryService.deleteEntry(entryId);
     }
 }
 

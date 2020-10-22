@@ -1,9 +1,8 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/main/js/app.js',
-    devtool: 'inline-source-map',
-    cache: true,
+    entry: './src/main/js/index.jsx',
+    devtool: 'source-map',
     mode: 'development',
     output: {
         path: __dirname,

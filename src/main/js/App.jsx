@@ -1,30 +1,48 @@
-import React, {useEffect} from "react";
+import React from "react";
 import './App.css';
 
+const useInterval = (callback, delay) => {
+    const savedCallback = React.useRef();
+
+    React.useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    React.useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+};
 
 const App = () => {
 
-    const [state, setState] = React.useState({
-        people: [],
-    })
+    const [people, setPeople] = React.useState([])
 
-    useEffect(() => {
-        fetch('/people')
+    useInterval(() => {
+        fetch('/api/people')
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setState({people: data})
+                if(data !== people) {
+                    console.log(data)
+                    setPeople(data);
+                }
             })
-    })
+    }, 1000)
 
-    const peopleList = () => {
-        state.people.map(elem => <li>elem.name</li>)
+    const peopleList = () =>
+        people.map((person, index) =>
+            <li key={index}>{person.name}</li>)
 
-    }
     return (
         <div className="App">
-            <p>Hello World!</p>
-            {peopleList}
+            <p>Herro World!</p>
+            {peopleList()}
         </div>
     );
 }
