@@ -1,5 +1,6 @@
 package com.dat250.FeedApp.service;
 
+import com.dat250.FeedApp.factories.JoinKeyFactory;
 import com.dat250.FeedApp.model.JoinKey;
 import com.dat250.FeedApp.model.Person;
 import com.dat250.FeedApp.model.Poll;
@@ -67,27 +68,11 @@ public class PollService {
     @ResponseStatus(HttpStatus.CREATED)
     public Poll getAPollFromAPerson(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll) {
         return personRepository.findById(personId).map(person -> {
-            JoinKey joinKey = createNewJoinKey();
-            joinKeyRepository.save(joinKey);
+            JoinKey joinKey = JoinKeyFactory.createNewJoinKey(joinKeyRepository);
             poll.setJoinKey(joinKey);
             poll.setPerson(person);
             return pollRepository.save(poll);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
-    }
-
-    private JoinKey createNewJoinKey() {
-        Random random = new Random();
-        Optional<JoinKey> optionalJoinKey;
-        long randomNum;
-        int min = 0, max = 1000000;
-        do {
-            randomNum = (long) random.nextInt((max - min) + 1) + min;
-            optionalJoinKey = joinKeyRepository.findByKey(randomNum);
-        } while (optionalJoinKey.isPresent());
-
-        JoinKey joinKey = new JoinKey();
-        joinKey.setKey(randomNum);
-        return joinKey;
     }
 
     @PutMapping("/people/{personId}/polls/{pollId}")
