@@ -23,7 +23,7 @@ final class UUIDAuthenticationService implements UserAuthenticationService {
 
     @Override
     public Optional<String> login(final String email, final String password) {
-
+        final String uuid = UUID.randomUUID().toString();
         Person p = personService.getPersonByEmail(email);
 
         if (!p.getPassword().equals(password)) {
@@ -33,7 +33,10 @@ final class UUIDAuthenticationService implements UserAuthenticationService {
         System.out.println("person pass: " + p.getPassword());
         System.out.println("insert pass: " + password);
 
-        final String uuid = p.getName(); // proof of concept
+        //final String uuid = p.getName(); // proof of concept
+
+        personService.setCookie(email, uuid);
+
         System.out.println("Login success for user: " + p.getEmail());
         return Optional.of(uuid);
     }
@@ -41,13 +44,14 @@ final class UUIDAuthenticationService implements UserAuthenticationService {
     @Override
     public Optional<Person> findByToken(final String token) {
         System.out.println("NAMENAMENAME aka token: " + token);
-        Person p = personService.getPersonByName(token);
+        Person p = personService.getPersonByCookie(token);
         System.out.println("THIS IS: " + p.getEmail());
-        return Optional.ofNullable(personService.getPersonByName(token));
+        return Optional.ofNullable(personService.getPersonByCookie(token));
     }
 
     @Override
     public void logout(final Person user) {
-        System.out.println("Nothing to see here");
+        System.out.println("USER TERMINATED");
+        personService.setCookie(user.getEmail(), ""); // clear cookie
     }
 }

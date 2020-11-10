@@ -32,6 +32,8 @@ public class Person extends AuditModel implements UserDetails {
     @JsonIgnore
     private String hash;
 
+    private String cookie;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "personId"))
     @Enumerated(EnumType.STRING)

@@ -45,6 +45,12 @@ public class PersonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Name: " + name + " not found"));
     }
 
+    public Person getPersonByCookie(String cookie) {
+        return personRepository
+                .findByCookie(cookie)
+                .orElseThrow(() -> new ResourceNotFoundException("Cookie: " + cookie + " not found"));
+    }
+
     public Person createPerson(Person person) {
         try{
             //person.setHash(encryptPassword(person.getHash()));
@@ -63,6 +69,13 @@ public class PersonService {
             if(personRequest.getRoles() != null) person.setRoles(personRequest.getRoles());
             return personRepository.save(person);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
+    }
+
+    public Person setCookie(String email, String cookie) {
+        return personRepository.findByEmail(email).map(person -> {
+            person.setCookie(cookie);
+            return personRepository.save(person);
+        }).orElseThrow(() -> new ResourceNotFoundException("Error setting cookie"));
     }
 
     private String encryptPassword(String password){

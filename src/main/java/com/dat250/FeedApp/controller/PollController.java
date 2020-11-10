@@ -1,10 +1,12 @@
 package com.dat250.FeedApp.controller;
 
+import com.dat250.FeedApp.model.Person;
 import com.dat250.FeedApp.model.Poll;
 import com.dat250.FeedApp.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +62,13 @@ public class PollController {
     }
 
     @DeleteMapping("/polls/{pollId}")
-    public ResponseEntity<?> deletePoll(@PathVariable Long pollId) {
-        return pollService.deletePoll(pollId);
+    public ResponseEntity<?> deletePoll(@PathVariable Long pollId, @AuthenticationPrincipal final Person user) {
+        Poll p = pollService.getPollById(pollId);
+        if (p.getPerson().getEmail().equals(user.getEmail())) {
+
+            return pollService.deletePoll(pollId);
+        }
+        System.out.println("ACCESS DENIED");
+        return null;
     }
 }
