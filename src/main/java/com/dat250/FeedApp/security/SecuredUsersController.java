@@ -13,19 +13,19 @@ import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PRIVATE;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/api")
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @AllArgsConstructor(access = PACKAGE)
 final class SecuredUsersController {
     @NonNull
     UserAuthenticationService authentication;
 
-    @GetMapping("/current")
+    @GetMapping("/users/current")
     Person getCurrent(@AuthenticationPrincipal final Person user) {
         return user;
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/users/logout")
     boolean logout(@AuthenticationPrincipal final Person user) {
         authentication.logout(user);
         return true;

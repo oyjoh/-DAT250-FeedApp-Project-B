@@ -61,11 +61,11 @@ public class PollController {
         return pollService.updatePoll(personId, pollId, pollRequest);
     }
 
+    // TODO REVISIT
     @DeleteMapping("/polls/{pollId}")
     public ResponseEntity<?> deletePoll(@PathVariable Long pollId, @AuthenticationPrincipal final Person user) {
         Poll p = pollService.getPollById(pollId);
-        if (p.getPerson().getEmail().equals(user.getEmail())) {
-
+        if (p.getPerson().getPersonId().equals(user.getPersonId())) {
             return pollService.deletePoll(pollId);
         }
         System.out.println("ACCESS DENIED");

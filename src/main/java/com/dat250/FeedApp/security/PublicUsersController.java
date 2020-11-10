@@ -6,11 +6,10 @@ import com.dat250.FeedApp.service.PersonService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PRIVATE;
 
 @RestController
-@RequestMapping("/public/users")
+@RequestMapping(value = "/api")
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @AllArgsConstructor(access = PACKAGE)
 final class PublicUsersController {
@@ -27,24 +26,17 @@ final class PublicUsersController {
     @NonNull
     private final PersonService personService;
 
-    @PostMapping("/register")
-    String register(
-            @RequestParam("email") final String email,
-            @RequestParam("password") final String password,
-            @RequestParam("name") final String name) {
+    @PostMapping("/public/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    Person register(@Validated @RequestBody Person person) {
+        String password = person.getHash();
+        Person p = personService.createPerson(person);
 
-        Person person = new Person();
-        person.setEmail(email);
-        person.setHash(password);
-        person.setName(name);
-
-        personService.createPerson(person);
-
-        return login(email, password);
+        return login(p.getEmail(), password);
     }
 
-    @PostMapping("/login")
-    String login(
+    @PostMapping("/public/login")
+    Person login(
             @RequestParam("email") final String email,
             @RequestParam("password") final String password) {
         return authentication

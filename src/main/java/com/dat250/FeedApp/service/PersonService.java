@@ -19,7 +19,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository){
+    public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
@@ -52,10 +52,10 @@ public class PersonService {
     }
 
     public Person createPerson(Person person) {
-        try{
-            //person.setHash(encryptPassword(person.getHash()));
+        try {
+            person.setHash(encryptPassword(person.getHash()));
             return personRepository.save(person);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             System.out.println("Person: " + person + " already exists");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Person " + person.getName() + " already exists", e);
         }
@@ -63,10 +63,10 @@ public class PersonService {
 
     public Person updatePerson(Long personId, Person personRequest) {
         return personRepository.findById(personId).map(person -> {
-            if(personRequest.getName() != null) person.setName(personRequest.getName());
-            if(personRequest.getEmail() != null) person.setEmail(personRequest.getEmail());
-            if(personRequest.getHash() != null) person.setHash(encryptPassword(personRequest.getHash()));
-            if(personRequest.getRoles() != null) person.setRoles(personRequest.getRoles());
+            if (personRequest.getName() != null) person.setName(personRequest.getName());
+            if (personRequest.getEmail() != null) person.setEmail(personRequest.getEmail());
+            if (personRequest.getHash() != null) person.setHash(encryptPassword(personRequest.getHash()));
+            if (personRequest.getRoles() != null) person.setRoles(personRequest.getRoles());
             return personRepository.save(person);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
     }
@@ -78,9 +78,13 @@ public class PersonService {
         }).orElseThrow(() -> new ResourceNotFoundException("Error setting cookie"));
     }
 
-    private String encryptPassword(String password){
+    public String encryptPassword(String password) {
         int N = 16384, r = 8, p = 1;
         return SCryptUtil.scrypt(password, N, r, p);
+    }
+
+    public Boolean checkPassword(String password, String hash) {
+        return SCryptUtil.check(password, hash);
     }
 
     public ResponseEntity<?> deletePerson(Long personId) {
