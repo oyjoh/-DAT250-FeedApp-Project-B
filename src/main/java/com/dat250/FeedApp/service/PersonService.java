@@ -39,6 +39,12 @@ public class PersonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Email: " + email + " not found"));
     }
 
+    public Person getPersonByName(String name) {
+        return personRepository
+                .findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Name: " + name + " not found"));
+    }
+
     public Person createPerson(Person person) {
         try{
             //person.setHash(encryptPassword(person.getHash()));

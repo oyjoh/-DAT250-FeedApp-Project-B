@@ -21,8 +21,8 @@ final class SecuredUsersController {
     UserAuthenticationService authentication;
 
     @GetMapping("/current")
-    Person getCurrent(@AuthenticationPrincipal final Person user) {
-        return user;
+    String getCurrent(@AuthenticationPrincipal final Person user) {
+        return user.getName();
     }
 
     @GetMapping("/logout")
