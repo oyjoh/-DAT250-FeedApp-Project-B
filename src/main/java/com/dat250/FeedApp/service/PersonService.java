@@ -33,9 +33,15 @@ public class PersonService {
                 .orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
     }
 
+    public Person getPersonByEmail(String email) {
+        return personRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Email: " + email + " not found"));
+    }
+
     public Person createPerson(Person person) {
         try{
-            person.setHash(encryptPassword(person.getName()));
+            //person.setHash(encryptPassword(person.getHash()));
             return personRepository.save(person);
         } catch (DataIntegrityViolationException e){
             System.out.println("Person: " + person + " already exists");
