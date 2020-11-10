@@ -35,7 +35,8 @@ public class PersonService {
 
     public Person createPerson(Person person) {
         try{
-            person.setHash(encryptPassword(person.getName()));
+            person.setHash(encryptPassword(person.getHash()));
+            System.out.println(person.getHash());
             return personRepository.save(person);
         } catch (DataIntegrityViolationException e){
             System.out.println("Person: " + person + " already exists");

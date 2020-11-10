@@ -1,9 +1,6 @@
 package com.dat250.FeedApp.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +21,7 @@ public class Person extends AuditModel{
 
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String hash;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -45,11 +42,17 @@ public class Person extends AuditModel{
     public boolean isAdmin(){ return roles.contains(Role.ADMIN); }
     public boolean isUser(){ return roles.contains(Role.USER); }
 
+    @Override
     public String toString() {
-        return "{" +
-                "\"personId\": " + personId + "," +
-                "\"name\": " + "\"" + name + "\"" +
-                "}";
+        return "Person{" +
+                "personId=" + personId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", hash='" + hash + '\'' +
+                ", roles=" + roles +
+                ", polls=" + polls +
+                ", entries=" + entries +
+                '}';
     }
 
     public Person() {}

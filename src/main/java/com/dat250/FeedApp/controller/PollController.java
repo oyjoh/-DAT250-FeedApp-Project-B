@@ -50,8 +50,8 @@ public class PollController {
     //TODO should be personID, pollID
     @PostMapping("/people/{personId}/polls")
     @ResponseStatus(HttpStatus.CREATED)
-    public Poll getAPollFromAPerson(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll) {
-        return pollService.getAPollFromAPerson(personId, poll);
+    public Poll createPoll(@PathVariable(value = "personId") Long personId, @Validated @RequestBody Poll poll) {
+        return pollService.createPoll(personId, poll);
     }
 
     @PutMapping("/people/{personId}/polls/{pollId}")

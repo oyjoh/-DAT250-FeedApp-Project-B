@@ -1,7 +1,11 @@
 package com.dat250.FeedApp.controller;
 
 import com.dat250.FeedApp.model.Person;
+import com.dat250.FeedApp.mqtt.config.Mqtt;
+import com.dat250.FeedApp.mqtt.controller.MqttController;
 import com.dat250.FeedApp.service.PersonService;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +38,7 @@ public class PersonController {
     @PostMapping("/people")
     @ResponseStatus(HttpStatus.CREATED)
     public Person createPerson(@Validated @RequestBody Person person) {
+        System.out.println(person);
         return personService.createPerson(person);
     }
 
