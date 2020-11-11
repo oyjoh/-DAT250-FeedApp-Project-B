@@ -13,7 +13,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, {useState} from "react";
 import axios from "axios";
-
+import {Redirect} from "react-router-dom";
 
 
 function Copyright() {
@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Login() {
+function Register() {
+    const [login, setLogin] = useState(false);
 
     const classes = useStyles();
 
@@ -64,7 +65,8 @@ function Login() {
         const name = target.name;
         const value = target.value;
 
-        setForm({...form,
+        setForm({
+            ...form,
             [name]: value
         });
     }
@@ -85,94 +87,102 @@ function Login() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            data : data
+            data: data
         };
 
         axios(config)
             .then(res => {
                 console.log(res.data);
+                setLogin(true);
                 document.cookie = 'Authorization=' + res.data.cookie + ';max-age=604800;domain=localhost'
+            })
+            .catch((error) => {
+                if (error.response.status === 401)
+                    alert("Authorization Error!\nUsername or email already in use");
             });
     }
 
+    if (login) {
+        return <Redirect to="/dash"/>
+    } else {
+        return (
+            <Container component="main" maxWidth="xs">
+                <CssBaseline/>
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
 
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Register
-                </Typography>
-                <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="username"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="https://youtu.be/ymeazYWw6ng?t=72" variant="body2">
-                                Forgot password?
-                            </Link>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Register
+                    </Typography>
+                    <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="username"
+                            name="username"
+                            autoComplete="username"
+                            autoFocus
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary"/>}
+                            label="Remember me"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="https://youtu.be/ymeazYWw6ng?t=72" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
-    );
+                    </form>
+                </div>
+                <Box mt={8}>
+                    <Copyright/>
+                </Box>
+            </Container>
+        );
+    }
+
 }
 
-export default Login;
+export default Register;
