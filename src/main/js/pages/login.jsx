@@ -11,6 +11,7 @@ import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Checkbox from "@material-ui/core/Checkbox";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import React from "react";
 
 
 function Copyright() {

@@ -1,5 +1,6 @@
 package com.dat250.FeedApp.service;
 
+import com.dat250.FeedApp.event.pollEvents.PollDeletedEvent;
 import com.dat250.FeedApp.factories.JoinKeyFactory;
 import com.dat250.FeedApp.event.pollEvents.PollCreatedEvent;
 import com.dat250.FeedApp.event.pollEvents.PollUpdatedEvent;
@@ -90,6 +91,8 @@ public class PollService {
     public ResponseEntity<?> deletePoll(Long pollId) {
         return pollRepository.findById(pollId).map(poll -> {
             pollRepository.delete(poll);
+            PollDeletedEvent pollDeletedEvent = new PollDeletedEvent(poll);
+            applicationEventPublisher.publishEvent(pollDeletedEvent);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }

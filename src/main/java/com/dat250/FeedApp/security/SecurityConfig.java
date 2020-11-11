@@ -32,6 +32,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // URLS without any form of security
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/static/**"),
+            new AntPathRequestMatcher("/login/**"),
             new AntPathRequestMatcher("/h2conf/**"),  // database has separate security mechanism
             new AntPathRequestMatcher("/api/public/**")
     );
