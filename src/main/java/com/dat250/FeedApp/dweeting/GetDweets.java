@@ -35,7 +35,7 @@ public class GetDweets {
     }
 
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 5000)
     public DweetLog checkForNewDweets() throws IOException {
         final String GET_DWEETS = "https://dweet.io:443/get/dweets/for/";
 
@@ -126,7 +126,7 @@ public class GetDweets {
         for (Dweet dweet : dweets) {
             String command = dweet.getCommand();
 
-            System.out.println(command);
+            // System.out.println(command);
         }
 
     }
