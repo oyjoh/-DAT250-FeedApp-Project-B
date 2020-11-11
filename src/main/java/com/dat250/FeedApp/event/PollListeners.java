@@ -26,6 +26,10 @@ public class PollListeners {
         switch (pollEvent.getDescription().toUpperCase()){
             case "CREATED": payload.addProperty("summary", poll.getSummary()); break;
             case "UPDATED":
+                payload.addProperty("info", "updated");
+                payload.addProperty("summary", poll.getSummary());
+                break;
+            case "ENDED":
                 payload.addProperty("summary", poll.getSummary());
                 payload.add("result", poll.getResult());
                 break;

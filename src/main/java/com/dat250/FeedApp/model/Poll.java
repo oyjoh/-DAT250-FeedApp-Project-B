@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Poll extends AuditModel {
+public class Poll extends AuditModel implements Comparable<Poll> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pollId;
@@ -25,6 +26,7 @@ public class Poll extends AuditModel {
     private String summary;
 
     private Date endAt;
+    private Boolean ended;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "joinkey_id", referencedColumnName = "id")
@@ -41,7 +43,7 @@ public class Poll extends AuditModel {
     private Person person;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Entry> entries;
 
 
@@ -54,15 +56,9 @@ public class Poll extends AuditModel {
 
     @JsonIgnore
     public JsonObject getResult(){
+        Long sumNo = entries.stream().filter(entry -> entry.getValue() == Value.NO).count();
+        Long sumYes = entries.stream().filter(entry -> entry.getValue() == Value.YES).count();
         JsonObject result = new JsonObject();
-        int sumYes = 0, sumNo = 0;
-        for(Entry entry : entries){
-            if(entry.getValue() == Value.NO){
-                sumNo += entry.getNumber();
-            } else {
-                sumYes += entry.getNumber();
-            }
-        }
         result.addProperty("yes", sumYes);
         result.addProperty("no", sumNo);
         return result;
@@ -70,4 +66,10 @@ public class Poll extends AuditModel {
 
     protected Poll() {
     }
+
+    @Override
+    public int compareTo(@NotNull Poll o) {
+        return endAt.compareTo(o.getEndAt());
+    }
 }
+

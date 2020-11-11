@@ -38,7 +38,6 @@ public class PersonController {
     @PostMapping("/people")
     @ResponseStatus(HttpStatus.CREATED)
     public Person createPerson(@Validated @RequestBody Person person) {
-        System.out.println(person);
         return personService.createPerson(person);
     }
 

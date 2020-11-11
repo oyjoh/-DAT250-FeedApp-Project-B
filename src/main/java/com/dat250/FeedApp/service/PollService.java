@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class PollService {
@@ -71,6 +69,7 @@ public class PollService {
             poll.setPerson(person);
             PollCreatedEvent pollCreatedEvent = new PollCreatedEvent(poll);
             applicationEventPublisher.publishEvent(pollCreatedEvent);
+            poll.setEnded(false);
             return pollRepository.save(poll);
         }).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " notFound"));
     }
