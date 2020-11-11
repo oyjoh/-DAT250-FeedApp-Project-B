@@ -30,12 +30,13 @@
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@material-ui/styles": "^4.10.0",
     "@material-ui/system": "^4.9.14",
     "@material-ui/utils": "^4.10.2",
     "axios": "^0.21.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0"
   }
 }

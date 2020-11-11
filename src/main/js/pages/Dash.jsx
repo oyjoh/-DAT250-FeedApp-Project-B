@@ -25,63 +25,66 @@ function createData(pollcode, yes, no, distribution, polldescription, enddate) {
     return { pollcode, yes, no, distribution, polldescription, enddate };
 }
 
-const rows = [
-    createData('351 136', 55, 6, "88.2%", "Do you want Pizza?", "25/04/21"),
-    createData('121 612', 32, 9, "74,0%","Can chickens fly?" , "25/12/20"),
-    createData('125 512', 43, 16,"93,4%", "Yes or no?", "12/05/21"),
-    createData('215 703', 3, 3,"50%" , "Are you coming to the match?", "01/01/21"),
-    createData('854 153', 11, 10, "52.5%", "Do you like The Beach Boys?", "06/06/21"),
-];
-
-const [pollList, setPollList] = useState([]);
-
-
-const person = {
-    createdAt: "2020-11-11T10:15:48.535+00:00",
-    updatedAt: "2020-11-11T10:15:48.647+00:00",
-    personId: 60,
-    name: "ola1605089748209",
-    email: "ola1605089748209@gmail.com",
-    cookie: "ed9a9476-4e59-4b96-a01c-d1fde887b837",
-    roles: [
-    "USER"
-],
-    polls: [
-        74,
-        75,
-        76,
-        77
-    ],
-    entries: [
-        105,
-        106,
-        107,
-        108,
-        109,
-        110
-    ],
-    enabled: true,
-    admin: false,
-    username: "60",
-    user: true
-}
-
-const getPoll = async (pollId) => {
-    return await axios.get('/api/polls/' + pollId)
-}
-
-
 const Dash = () => {
+    const rows = [
+        createData('351 136', 55, 6, "88.2%", "Do you want Pizza?", "25/04/21"),
+        createData('121 612', 32, 9, "74,0%","Can chickens fly?" , "25/12/20"),
+        createData('125 512', 43, 16,"93,4%", "Yes or no?", "12/05/21"),
+        createData('215 703', 3, 3,"50%" , "Are you coming to the match?", "01/01/21"),
+        createData('854 153', 11, 10, "52.5%", "Do you like The Beach Boys?", "06/06/21"),
+    ];
+
+    const person = {
+        createdAt: "2020-11-11T10:15:48.535+00:00",
+        updatedAt: "2020-11-11T10:15:48.647+00:00",
+        personId: 60,
+        name: "ola1605089748209",
+        email: "ola1605089748209@gmail.com",
+        cookie: "26d885a2-85e7-45e6-ae4d-d52b7c44cf40",
+        roles: [
+            "USER"
+        ],
+        polls: [
+            79,
+            80,
+            81
+        ],
+        entries: [],
+        enabled: true,
+        admin: false,
+        username: "60",
+        user: true
+    }
+
     const classes = useStyles();
 
+    const [pollList, setPollList] = useState([]);
+
+
+    const getPoll = (pollId) => {
+        const config = {
+            method: 'get',
+            url: '/api/polls/' + pollId,
+            headers: {
+                Authorization: 'Bearer ' + person.cookie,
+            }
+        };
+
+        return axios(config)
+            .then(res => { console.log(res.data); return res.data;});
+    }
+
     useEffect(() => {
-        for (const pollId of person.polls) {
+        person.polls.forEach(pollId => {
+            console.log(pollId)
             const newPollList = pollList.concat(getPoll(pollId));
             setPollList(newPollList);
-        }
+        })
+
     });
 
     return (
+
         <div>
         <AppBar position="static">
             <Toolbar>
