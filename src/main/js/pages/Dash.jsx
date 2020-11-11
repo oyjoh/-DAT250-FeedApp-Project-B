@@ -75,16 +75,15 @@ const Dash = () => {
     }
 
     useEffect(() => {
+        let newPollList = []
         person.polls.forEach(pollId => {
-            console.log(pollId)
-            const newPollList = pollList.concat(getPoll(pollId));
-            setPollList(newPollList);
+            newPollList = newPollList.concat(getPoll(pollId));
         })
+        setPollList(newPollList);
+    },[]);
 
-    });
 
     return (
-
         <div>
         <AppBar position="static">
             <Toolbar>
@@ -111,18 +110,18 @@ const Dash = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow key={row.pollcode}>
+                            {pollList.map((poll, index) => (
+                                <TableRow key={index}>
                                     <TableCell component="th" scope="row">
-                                        {row.pollcode}
+                                        {poll.joinKey}
                                     </TableCell>
-                                    <TableCell align="right">{row.yes}</TableCell>
-                                    <TableCell align="right">{row.no}</TableCell>
-                                    <TableCell align="right">{row.distribution}</TableCell>
-                                    <TableCell align="right">{row.polldescription}</TableCell>
-                                    <TableCell align="right">{row.enddate}</TableCell>
+                                    <TableCell align="right">{10}</TableCell>
+                                    <TableCell align="right">{7}</TableCell>
+                                    <TableCell align="right">{4}</TableCell>
+                                    <TableCell align="right">{poll.summary}</TableCell>
+                                    <TableCell align="right">{poll.endAt}</TableCell>
                                     <TableCell align="right">
-                                        <VoteButtonComponent pollcode={row.pollcode}/>
+                                        <VoteButtonComponent pollcode={poll.joinKey}/>
                                     </TableCell>
                                 </TableRow>
                             ))}

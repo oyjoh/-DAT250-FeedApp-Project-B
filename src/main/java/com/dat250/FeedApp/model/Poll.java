@@ -1,9 +1,6 @@
 package com.dat250.FeedApp.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -54,7 +51,7 @@ public class Poll extends AuditModel implements Comparable<Poll> {
         return objectMapper.writeValueAsString(this);
     }
 
-    @JsonIgnore
+    @JsonProperty
     public JsonObject getResult(){
         Long sumNo = entries.stream().filter(entry -> entry.getValue() == Value.NO).count();
         Long sumYes = entries.stream().filter(entry -> entry.getValue() == Value.YES).count();
