@@ -13,15 +13,15 @@ import Checkbox from "@material-ui/core/Checkbox";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, {useState} from "react";
 import axios from "axios";
-
+import {Redirect} from "react-router-dom";
 
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            <Link color="inherit" href="https://github.com/oyjoh/DAT250-FeedApp-Project-B">
+                Group4
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -50,14 +50,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Login() {
+    const [login, setLogin] = useState(false);
 
     const classes = useStyles();
 
     const [form, setForm] = useState({
-        "name": "testPerson1",
         "email": "",
         "password": "",
     });
+
 
     const handleChange = (event) => {
         const target = event.target;
@@ -65,7 +66,8 @@ function Login() {
         const value = target.value;
         console.log(value);
 
-        setForm({...form,
+        setForm({
+            ...form,
             [name]: value
         });
     }
@@ -74,94 +76,94 @@ function Login() {
         console.log(form);
         event.preventDefault();
 
-        const data = JSON.stringify({
-            "name": form.name,
-            "email": form.email,
-            "hash": form.password,
-        });
-
-        console.log(data);
-
-        const config = {
+        axios({
             method: 'post',
-            url: 'api/public/register',
-            headers: {
-                'Content-Type': 'application/json'
+            url: '/api/public/login',
+            params: {
+                email: form.email,
+                password: form.password
             },
-            data : data
-        };
+            responseType: 'stream'
+        })
+            .then(res => {
+                console.log(res.data);
+                setLogin(true);
+                document.cookie = 'Authorization=' + res.data.cookie + ';max-age=604800;domain=localhost'
+            })
+            .catch((error) => {
+                if (error.response.status === 401)
+                    alert("Error");
+            });
 
-        axios(config)
-            .then(console.log);
+
     }
 
+    if (login) {
+        return <Redirect to="/dash"/>;
+    } else {
+        return (
+            <Container component="main" maxWidth="xs">
+                <CssBaseline/>
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
 
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="https://youtu.be/ymeazYWw6ng?t=72" variant="body2">
-                                Forgot password?
-                            </Link>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="https://youtu.be/ymeazYWw6ng?t=72" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="/register" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
-    );
+                    </form>
+                </div>
+                <Box mt={8}>
+                    <Copyright/>
+                </Box>
+            </Container>
+        );
+    }
+
 }
 
 export default Login;
