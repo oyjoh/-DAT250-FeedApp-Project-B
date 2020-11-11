@@ -76,15 +76,15 @@ function Login() {
         console.log(form);
         event.preventDefault();
 
-        const config = {
+        axios({
             method: 'post',
-            url: 'api/public/login'+'?email='+form.email+'&password='+ form.password,
-            headers: {
-                'Content-Type': 'application/json'
+            url: '/api/public/login',
+            params: {
+                email: form.email,
+                password: form.password
             },
-        };
-
-        axios(config)
+            responseType: 'stream'
+        })
             .then(res => {
                 console.log(res.data);
                 setLogin(true);
@@ -94,6 +94,8 @@ function Login() {
                 if (error.response.status === 401)
                     alert("Error");
             });
+
+
     }
 
     if (login) {
