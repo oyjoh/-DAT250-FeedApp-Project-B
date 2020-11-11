@@ -303,3 +303,4 @@ database/
 
 /node_modules/
 /spring-server-tcp1270011883/
+/src/main/resources/static/built/
