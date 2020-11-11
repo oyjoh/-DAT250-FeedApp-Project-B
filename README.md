@@ -3,6 +3,7 @@
 * Import and build as maven project
 
 * Run the project
+    * run mqtt service
     * run FeedAppApplication.java located: `.../src/main/java/com/dat250/FeedApp/FeedAppApplication.java`
 
 

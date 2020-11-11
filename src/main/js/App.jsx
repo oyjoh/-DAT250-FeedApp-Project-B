@@ -37,7 +37,7 @@ const App = () => {
 
     const peopleList = () =>
         people.map((person, index) =>
-            <li key={index}>{person.name}</li>)
+            <li key={index}><a href={"api/people/" + person.personId}>{person.name}</a></li>)
 
     return (
         <div className="App">
