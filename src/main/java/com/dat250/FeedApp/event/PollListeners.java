@@ -30,12 +30,13 @@ public class PollListeners {
                 payload.addProperty("summary", poll.getSummary());
                 break;
             case "ENDED":
+                payload.addProperty("joinkey", poll.getJoinKey().getKey().toString());
                 payload.addProperty("summary", poll.getSummary());
                 payload.add("result", poll.getResult());
                 break;
             case "DELETED":
                 payload.addProperty("summary", poll.getSummary());
-                payload.addProperty("summary", poll.getSummary());
+                payload.add("result", poll.getResult());
                 break;
         }
 

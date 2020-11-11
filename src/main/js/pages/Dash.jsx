@@ -65,6 +65,7 @@ const person = {
     username: "60",
     user: true
 }
+
 const getPoll = async (pollId) => {
     return await axios.get('/api/polls/' + pollId)
 }
