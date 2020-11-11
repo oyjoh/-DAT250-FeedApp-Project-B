@@ -54,7 +54,7 @@ function Login() {
     const classes = useStyles();
 
     const [form, setForm] = useState({
-        "name": "testPerson1",
+        "username": "testPerson1",
         "email": "",
         "password": "",
     });
@@ -63,7 +63,6 @@ function Login() {
         const target = event.target;
         const name = target.name;
         const value = target.value;
-        console.log(value);
 
         setForm({...form,
             [name]: value
@@ -75,12 +74,10 @@ function Login() {
         event.preventDefault();
 
         const data = JSON.stringify({
-            "name": form.name,
+            "name": form.username,
             "email": form.email,
             "hash": form.password,
         });
-
-        console.log(data);
 
         const config = {
             method: 'post',
@@ -92,7 +89,10 @@ function Login() {
         };
 
         axios(config)
-            .then(console.log);
+            .then(res => {
+                console.log(res.data);
+                document.cookie = 'Authorization=' + res.data.cookie + ';max-age=604800;domain=localhost'
+            });
     }
 
 
@@ -105,9 +105,20 @@ function Login() {
 
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Register
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="username"
+                        name="username"
+                        autoComplete="username"
+                        autoFocus
+                    />
                     <TextField
                         variant="outlined"
                         margin="normal"

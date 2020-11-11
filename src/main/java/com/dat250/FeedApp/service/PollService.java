@@ -54,6 +54,7 @@ public class PollService {
         ).orElseThrow(() -> new ResourceNotFoundException("JoinKey: " + joinKey + " notFound"));
     }
 
+    //TODO this should be getPoll()
     public Poll updatePoll(Long personId, Long pollId) {
         return pollRepository.findByPollIdAndPersonPersonId(pollId, personId).orElseThrow(() -> new ResourceNotFoundException("Not Found"));
     }
