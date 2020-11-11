@@ -76,20 +76,12 @@ function Login() {
         console.log(form);
         event.preventDefault();
 
-        const data = JSON.stringify({
-            "email": form.email,
-            "hash": form.password,
-        });
-
-        console.log(data);
-
         const config = {
             method: 'post',
-            url: 'api/public/login',
+            url: 'api/public/login'+'?email='+form.email+'&password='+ form.password,
             headers: {
                 'Content-Type': 'application/json'
             },
-            data: data
         };
 
         axios(config)
