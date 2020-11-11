@@ -2,6 +2,8 @@ package com.dat250.FeedApp.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,14 +53,12 @@ public class Poll extends AuditModel implements Comparable<Poll> {
         return objectMapper.writeValueAsString(this);
     }
 
-    @JsonProperty
-    public JsonObject getResult(){
-        Long sumNo = entries.stream().filter(entry -> entry.getValue() == Value.NO).count();
-        Long sumYes = entries.stream().filter(entry -> entry.getValue() == Value.YES).count();
-        JsonObject result = new JsonObject();
-        result.addProperty("yes", sumYes);
-        result.addProperty("no", sumNo);
-        return result;
+    public long getYes(){
+        return entries == null ? 0 : entries.stream().filter(entry -> entry.getValue() == Value.YES).count();
+    }
+
+    public long getNo(){
+        return entries == null ? 0 : entries.stream().filter(entry -> entry.getValue() == Value.NO).count();
     }
 
     protected Poll() {

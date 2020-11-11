@@ -35,8 +35,10 @@
     "@material-ui/system": "^4.9.14",
     "@material-ui/utils": "^4.10.2",
     "axios": "^0.21.0",
+    "core-js": "^3.7.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "regenerator-runtime": "^0.13.7"
   }
 }
