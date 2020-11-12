@@ -56,21 +56,22 @@ const Polltable = (props) => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            if(props.polls === undefined) return;
-            setIsLoading(true);
-            let newPollList = [];
-            props.polls.forEach(pollId => {
-                newPollList = newPollList.concat(getPoll(pollId));
-            })
-            const result = await Promise.all(newPollList);
-            console.log(result);
-            setPollList(result);
-            setIsLoading(false);
-        };
         console.log(pollList);
         fetchData();
     },[]);
+
+    const fetchData = async (e) => {
+        if(props.polls === undefined) return;
+        setIsLoading(true);
+        let newPollList = [];
+        props.polls.forEach(pollId => {
+            newPollList = newPollList.concat(getPoll(pollId));
+        })
+        const result = await Promise.all(newPollList);
+        console.log(result);
+        setPollList(result);
+        setIsLoading(false);
+    };
 
     const distrbution = (yes, no) => {
         if(yes === no) return 50;
@@ -118,7 +119,7 @@ const Polltable = (props) => {
                                     <TableCell align="right">{poll.summary}</TableCell>
                                     <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
-                                        {(poll.ended ? <div/> : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>)}
+                                        {(poll.ended ? <div/> : <VoteButtonComponent {...{action: fetchData, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>)}
                                     </TableCell>
                                 </TableRow>
                             ))}

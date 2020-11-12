@@ -42,7 +42,7 @@ function VoteButtonComponent(props) {
     const sendVote = (vote) => {
         const data = JSON.stringify(
             {"value": vote, "number": 1}
-            );
+        );
 
         const config = {
             method: 'post',
@@ -56,7 +56,7 @@ function VoteButtonComponent(props) {
 
         axios(config)
             .then((res) => {
-                if(res.data === "") alert("You have already voted on this poll!");
+                if (res.data === "") alert("You have already voted on this poll!");
                 console.log(res);
             })
             .catch((error) => {
@@ -70,7 +70,7 @@ function VoteButtonComponent(props) {
 
     return (
         <div>
-        <Button disableElevation variant="outlined" onClick={handleOpen}>Vote on Poll</Button>
+            <Button disableElevation variant="outlined" onClick={handleOpen}>Vote on Poll</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -78,17 +78,30 @@ function VoteButtonComponent(props) {
                 aria-describedby="simple-modal-description"
             >
                 <div style={modalStyle} className={classes.paper}>
-                <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>{props.summary}</h2>
-                <div style={{textAlign: "-webkit-center"}}>
-                    <p>Poll code: {props.pollCode}</p>
-                    <ButtonGroup disableElevation variant="contained" fullWidth size="large">
-                        <Button onClick={() => {handleClick("YES"); handleClose()}} color="primary">YES</Button>
-                        <Button onClick={() => {handleClick("NO"); handleClose()}} color="secondary">NO</Button>
-                    </ButtonGroup>
+                    <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>{props.summary}</h2>
+                    <div style={{textAlign: "-webkit-center"}}>
+                        <p>Poll code: {props.pollCode}</p>
+                        <ButtonGroup disableElevation variant="contained" fullWidth size="large">
+                            <Button onClick={() => {
+                                handleClick("YES");
+                                handleClose();
+                                setTimeout(() => {
+                                    props.action(props.pollCode)
+                                }, 500)
+                            }} color="primary">YES</Button>
+                            <Button onClick={() => {
+                                handleClick("NO");
+                                handleClose();
+                                setTimeout(() => {
+                                    props.action(props.pollCode)
+                                }, 500)
+                            }} color="secondary">NO</Button>
+                        </ButtonGroup>
+                    </div>
                 </div>
-        </div>
             </Modal>
         </div>
     );
 }
+
 export default VoteButtonComponent;

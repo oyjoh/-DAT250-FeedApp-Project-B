@@ -5,6 +5,8 @@ import "regenerator-runtime/runtime";
 import axios from "axios";
 import SearchBar from "material-ui-search-bar";
 import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
+import withStyles from "@material-ui/core/styles/withStyles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles((theme) => ({
     }));
@@ -24,6 +26,7 @@ const Pollsearch = (props) => {
     }
 
     const handleSubmit = (value) => {
+        console.log("hey", value);
         axios({
             method: 'get',
             url: '/api/polls/joinkey/' + value,
@@ -44,15 +47,48 @@ const Pollsearch = (props) => {
     }
 
     const checkIfEqual = (pollKey, currVal) => {
-        if(pollKey === undefined) {
+        if (pollKey === undefined) {
             return false;
         }
         return pollKey.toString() === currVal;
     }
+    const distrbution = (yes, no) => {
+        if(yes === no) return 50;
+        return (yes/(no+yes)*100);
+    }
+    const BorderLinearProgress = withStyles({
+        root: {
+            height: 10,
+            backgroundColor: '#ff6c5c',
+        },
+        bar: {
+            backgroundColor: '#5c9eff',
+        },
+    })(LinearProgress);
+
+    const distShow = <BorderLinearProgress
+        className={classes.margin}
+        variant="determinate"
+        color="primary"
+        value={distrbution(poll.yes, poll.no)}/>;
 
     const votePoll = checkIfEqual(poll.joinKey, searchVal) ?
-        (poll.ended ? <div/> : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>) :
-            <div/>;
+        poll.ended ?
+            <div>
+                <br/>
+                {distShow}
+                <p>yes: {poll.yes}  |  no: {poll.no}</p>
+                <p>This poll has ended.</p>
+            </div>
+            :
+            <div>
+                <br/>
+                {distShow}
+                <p>yes: {poll.yes}  |  no: {poll.no}</p>
+                <VoteButtonComponent {...{action: handleSubmit, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>
+            </div>
+        :
+        (<div/>);
 
     return (
         <div style={{padding:"20px"}}>
