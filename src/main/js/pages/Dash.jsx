@@ -12,6 +12,7 @@ import Polltable from "../components/Polltable.jsx";
 import Pollsearch from "../components/Pollsearch.jsx";
 import {Redirect} from "react-router-dom";
 import Button from '@material-ui/core/Button';
+import PollCreatorComponent from "../components/PollCreatorComponent.jsx";
 
 const useStyles = makeStyles({
     table: {
@@ -60,29 +61,6 @@ const Dash = () => {
             })
     };
 
-    const addPoll = () => {
-        const config = {
-            method: 'post',
-            url: '/api/people/' + person.personId + '/polls/',
-            headers: {
-                'Content-Type' : 'application/json',
-                Authorization: 'Bearer ' + person.cookie,
-            },
-            data: JSON.stringify({
-                "summary": "this is library",
-                "isPublic": true,
-
-            })
-        };
-        axios(config)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((error) => {
-                alert(error)
-            });
-    };
-
     const cookieValue = (cookieName) => document.cookie
         .split('; ')
         .find(row => row.startsWith(cookieName))
@@ -118,9 +96,7 @@ const Dash = () => {
                 <Typography variant="h6" className={classes.title} style={{ flex: 1 }}>
                     User: {person.name}
                 </Typography>
-                <Button href="/dash" variant="outlined" color="inherit" onClick={() => addPoll()}>
-                    ADDPOLL
-                </Button>
+                <PollCreatorComponent {...{personId: person.personId, cookie: person.cookie}}/>
                 <Button variant="outlined" color="inherit" onClick={() => handleLogout()}>
                     Logout
                 </Button>
