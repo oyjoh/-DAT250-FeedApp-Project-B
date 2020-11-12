@@ -50,10 +50,11 @@ const Polltable = (props) => {
         const fetchData = async () => {
             setIsLoading(true);
             let newPollList = [];
-            props.polls.forEach(pollId => {
-                newPollList = newPollList.concat(getPoll(pollId));
-            })
-
+            if(props.polls !== undefined){
+                props.polls.forEach(pollId => {
+                    newPollList = newPollList.concat(getPoll(pollId));
+                })
+            }
             const result = await Promise.all(newPollList);
             console.log(result);
             setPollList(result);
@@ -61,6 +62,7 @@ const Polltable = (props) => {
         };
         console.log(pollList);
         fetchData();
+
     },[]);
 
     const distrbution = (yes, no) => {

@@ -77,7 +77,7 @@ const Dash = () => {
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "7em"}}>
-                <Pollsearch/>
+                <Pollsearch {...{cookie: person.cookie}}/>
                 <Polltable {...{polls: person.polls, cookie: person.cookie}}/>
             </Container>
         </div>
