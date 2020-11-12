@@ -155,7 +155,7 @@ function Register() {
                             color="primary"
                             className={classes.submit}
                         >
-                            Sign In
+                            Sign Up
                         </Button>
                     </form>
                 </div>
