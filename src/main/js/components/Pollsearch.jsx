@@ -2,19 +2,20 @@ import React, {useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import {fade, Paper} from "@material-ui/core";
 import axios from "axios";
 import SearchBar from "material-ui-search-bar";
+import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
+import withStyles from "@material-ui/core/styles/withStyles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles((theme) => ({
     }));
 
 
-const Polltable = (props) => {
+const Pollsearch = (props) => {
     const classes = useStyles();
 
     const [searchVal, setSearchVal] = useState("");
-
     const [poll, setPoll] = useState({});
 
     const handleChange = (event) => {
@@ -25,6 +26,7 @@ const Polltable = (props) => {
     }
 
     const handleSubmit = (value) => {
+        console.log("hey", value);
         axios({
             method: 'get',
             url: '/api/polls/joinkey/' + value,
@@ -40,10 +42,53 @@ const Polltable = (props) => {
                 setPoll(newPoll);
             })
             .catch((error) => {
-                if (error.response.status === 401)
-                    alert("Error");
+                return error;
             });
     }
+
+    const checkIfEqual = (pollKey, currVal) => {
+        if (pollKey === undefined) {
+            return false;
+        }
+        return pollKey.toString() === currVal;
+    }
+    const distrbution = (yes, no) => {
+        if(yes === no) return 50;
+        return (yes/(no+yes)*100);
+    }
+    const BorderLinearProgress = withStyles({
+        root: {
+            height: 10,
+            backgroundColor: '#ff6c5c',
+        },
+        bar: {
+            backgroundColor: '#5c9eff',
+        },
+    })(LinearProgress);
+
+    const distShow = <BorderLinearProgress
+        className={classes.margin}
+        variant="determinate"
+        color="primary"
+        value={distrbution(poll.yes, poll.no)}/>;
+
+    const votePoll = checkIfEqual(poll.joinKey, searchVal) ?
+        poll.ended ?
+            <div>
+                <br/>
+                {distShow}
+                <p>yes: {poll.yes}  |  no: {poll.no}</p>
+                <p>This poll has ended.</p>
+            </div>
+            :
+            <div>
+                <br/>
+                {distShow}
+                <p>yes: {poll.yes}  |  no: {poll.no}</p>
+                <VoteButtonComponent {...{action: handleSubmit, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>
+            </div>
+        :
+        (<div/>);
 
     return (
         <div style={{padding:"20px"}}>
@@ -52,7 +97,8 @@ const Polltable = (props) => {
                 onChange={(newValue) => setSearchVal(newValue)}
                 onRequestSearch={() => handleSubmit(searchVal)}
             />
+            {votePoll}
         </div>
     );
 }
-export default Polltable;
+export default Pollsearch;

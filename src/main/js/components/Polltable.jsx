@@ -56,31 +56,37 @@ const Polltable = (props) => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            let newPollList = [];
-            props.polls.forEach(pollId => {
-                newPollList = newPollList.concat(getPoll(pollId));
-            })
-            const result = await Promise.all(newPollList);
-            console.log(result);
-            setPollList(result);
-            setIsLoading(false);
-        };
         console.log(pollList);
         fetchData();
-
     },[]);
+
+    const fetchData = async (e) => {
+        if(props.polls === undefined) return;
+        setIsLoading(true);
+        let newPollList = [];
+        props.polls.forEach(pollId => {
+            newPollList = newPollList.concat(getPoll(pollId));
+        })
+        const result = await Promise.all(newPollList);
+        console.log(result);
+        setPollList(result);
+        setIsLoading(false);
+    };
 
     const distrbution = (yes, no) => {
         if(yes === no) return 50;
         return (yes/(no+yes)*100);
     }
 
+
     const formatDate = (dateString) => {
+        if(dateString === null) return "";
         const date = new Date(dateString);
         return date.toLocaleString();
     }
+
+
+    const rowColor = (yes, no) => yes === no ? "" : yes > no ? lighten('#5c9eff', 0.5) : lighten('#ff6c5c', 0.5) ;
 
     return (
                 <TableContainer component={Paper}>
@@ -97,8 +103,8 @@ const Polltable = (props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {pollList.map((poll) => (
-                                <TableRow key={poll.pollId}>
+                            {pollList === undefined ? <div/> : pollList.map((poll) => (
+                                <TableRow style={{background :rowColor(poll.yes, poll.no)}} key={poll.pollId}>
                                     <TableCell component="th" scope="row">{poll.joinKey}</TableCell>
                                     <TableCell align="right">{poll.yes}</TableCell>
                                     <TableCell align="right">{poll.no}</TableCell>
@@ -113,7 +119,7 @@ const Polltable = (props) => {
                                     <TableCell align="right">{poll.summary}</TableCell>
                                     <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
-                                        <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId}}/>
+                                        {(poll.ended ? <div/> : <VoteButtonComponent {...{action: fetchData, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>)}
                                     </TableCell>
                                 </TableRow>
                             ))}

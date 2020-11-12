@@ -26,7 +26,7 @@ const Dash = () => {
     const [loading, setLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useState(true);
 
-    const getPerson = async (cookie) => {
+    const getPerson = (cookie) => {
         const config = {
             method: 'get',
             url: '/api/people/current',
@@ -103,7 +103,7 @@ const Dash = () => {
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "2em"}}>
-                <Pollsearch {...{cookie: person.cookie}}/>
+                <Pollsearch {...{cookie: person.cookie, personId: person.personId}}/>
                 {pt}
             </Container>
         </div>
