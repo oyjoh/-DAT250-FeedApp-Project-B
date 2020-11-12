@@ -28,12 +28,12 @@ const Dash = () => {
     const [person, setPerson] = useState({});
     const [loading, setLoading] = useState(false);
 
-    const getPerson = (cookie) => {
+    const getPerson = async (cookie) => {
         const config = {
             method: 'get',
-            url: '/api/polls/',
+            url: '/api/people/current',
             headers: {
-                Authorization: 'Bearer ' + props.cookie,
+                Authorization: 'Bearer ' + cookie,
             }
         };
 
@@ -44,21 +44,25 @@ const Dash = () => {
             });
     }
 
+    const cookieValue = (cookieName) => document.cookie
+        .split('; ')
+        .find(row => row.startsWith(cookieName))
+        .split('=')[1];
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-
-            const result = await axios()
+            const cookie = cookieValue("Authorization");
+            console.log(cookie);
+            const result = await getPerson(cookie);
             console.log(result);
-            setPollList(result);
-            setIsLoading(false);
+            setPerson(result);
+            setLoading(false);
         };
+        fetchData();
     })
 
     const classes = useStyles();
-
-    //TODO login set cookie, get person based on cookie here
-    useState()
 
     return (
         <div>
