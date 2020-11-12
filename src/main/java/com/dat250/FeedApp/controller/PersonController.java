@@ -32,7 +32,7 @@ public class PersonController {
 
     @GetMapping("/people/current")
     public Person getCurrentUser(@AuthenticationPrincipal final Person user) {
-        return user;
+        return personService.getPerson(user.getPersonId());
     }
 
     @GetMapping("/people")
