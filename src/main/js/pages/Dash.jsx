@@ -15,7 +15,8 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import Polltable from "../components/Polltable.jsx"
+import Polltable from "../components/Polltable.jsx";
+import Pollsearch from "../components/Pollsearch.jsx";
 
 const useStyles = makeStyles({
     table: {
@@ -60,7 +61,7 @@ const Dash = () => {
             setLoading(false);
         };
         fetchData();
-    })
+    }, []);
 
     const classes = useStyles();
 
@@ -76,6 +77,7 @@ const Dash = () => {
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "7em"}}>
+                <Pollsearch/>
                 <Polltable {...{polls: person.polls, cookie: person.cookie}}/>
             </Container>
         </div>
