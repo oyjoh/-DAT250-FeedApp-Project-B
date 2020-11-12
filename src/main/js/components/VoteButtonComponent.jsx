@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import axios from "axios";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 function getModalStyle() {
     const top = 50;
@@ -20,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         width: 400,
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
@@ -73,7 +73,7 @@ function VoteButtonComponent(props) {
 
     return (
         <div>
-        <Button style={{backgroundColor: "#2d9bb5", color: "white"}} variant="contained" onClick={handleOpen}>Go to Poll</Button>
+        <Button color="primary"  disableElevation variant="contained" onClick={handleOpen}>Go to Poll</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -84,8 +84,10 @@ function VoteButtonComponent(props) {
                 <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>Vote</h2>
                 <div style={{textAlign: "-webkit-center"}}>
                     <p>Poll code: {props.pollCode}</p>
-                    <Button onClick={() => handleClick("YES")} size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>YES</Button>
-                    <Button onClick={() => handleClick("NO")} size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>NO</Button>
+                    <ButtonGroup disableElevation variant="outlined" fullWidth size="large">
+                        <Button onClick={() => handleClick("YES")} color="primary">YES</Button>
+                        <Button onClick={() => handleClick("NO")} color="secondary">NO</Button>
+                    </ButtonGroup>
                 </div>
         </div>
             </Modal>
