@@ -2,15 +2,15 @@ import React, {useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import {fade, Paper} from "@material-ui/core";
 import axios from "axios";
 import SearchBar from "material-ui-search-bar";
+import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
 
 const useStyles = makeStyles((theme) => ({
     }));
 
 
-const Polltable = (props) => {
+const Pollsearch = (props) => {
     const classes = useStyles();
 
     const [searchVal, setSearchVal] = useState("");
@@ -23,6 +23,8 @@ const Polltable = (props) => {
 
         setSearchVal(value);
     }
+
+    const [pollSet, setPollSet] = useState(false);
 
     const handleSubmit = (value) => {
         axios({
@@ -37,6 +39,7 @@ const Polltable = (props) => {
                 return res.data
             })
             .then(newPoll => {
+                setPollSet(true);
                 setPoll(newPoll);
             })
             .catch((error) => {
@@ -45,6 +48,10 @@ const Polltable = (props) => {
             });
     }
 
+    const votePoll = !pollSet
+        ? <p>---</p>
+        : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>;
+
     return (
         <div style={{padding:"20px"}}>
             <SearchBar
@@ -52,7 +59,8 @@ const Polltable = (props) => {
                 onChange={(newValue) => setSearchVal(newValue)}
                 onRequestSearch={() => handleSubmit(searchVal)}
             />
+            {votePoll}
         </div>
     );
 }
-export default Polltable;
+export default Pollsearch;

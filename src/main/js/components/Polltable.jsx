@@ -113,7 +113,7 @@ const Polltable = (props) => {
                                     <TableCell align="right">{poll.summary}</TableCell>
                                     <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
-                                        <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId}}/>
+                                        <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>
                                     </TableCell>
                                 </TableRow>
                             ))}

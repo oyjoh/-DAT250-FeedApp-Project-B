@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         width: 400,
         backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
 }));
@@ -45,7 +44,6 @@ function VoteButtonComponent(props) {
         const data = JSON.stringify(
             {"value": vote, "number": 1}
             );
-        console.log("VOTEDATA", data);
 
         const config = {
             method: 'post',
@@ -81,12 +79,12 @@ function VoteButtonComponent(props) {
                 aria-describedby="simple-modal-description"
             >
                 <div style={modalStyle} className={classes.paper}>
-                <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>Vote</h2>
+                <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>{props.summary}</h2>
                 <div style={{textAlign: "-webkit-center"}}>
                     <p>Poll code: {props.pollCode}</p>
                     <ButtonGroup disableElevation variant="outlined" fullWidth size="large">
-                        <Button onClick={() => handleClick("YES")} color="primary">YES</Button>
-                        <Button onClick={() => handleClick("NO")} color="secondary">NO</Button>
+                        <Button onClick={() => {handleClick("YES"); handleClose()}} color="primary">YES</Button>
+                        <Button onClick={() => {handleClick("NO"); handleClose()}} color="secondary">NO</Button>
                     </ButtonGroup>
                 </div>
         </div>

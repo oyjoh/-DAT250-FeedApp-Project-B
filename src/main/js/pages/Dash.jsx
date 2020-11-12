@@ -25,7 +25,7 @@ const Dash = () => {
     const [loading, setLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useState(true);
 
-    const getPerson = async (cookie) => {
+    const getPerson = (cookie) => {
         const config = {
             method: 'get',
             url: '/api/people/current',
@@ -63,7 +63,7 @@ const Dash = () => {
     const addPoll = () => {
         const config = {
             method: 'post',
-            url: '/api/people/' + person.personId + '/polls/',
+            url: '/api/people/' + person.personId + '/polls',
             headers: {
                 'Content-Type' : 'application/json',
                 Authorization: 'Bearer ' + person.cookie,
@@ -118,7 +118,7 @@ const Dash = () => {
                 <Typography variant="h6" className={classes.title} style={{ flex: 1 }}>
                     User: {person.name}
                 </Typography>
-                <Button href="/dash" variant="outlined" color="inherit" onClick={() => addPoll()}>
+                <Button href="/dash" variant="outlined" color="inherit" onClick={addPoll}>
                     ADDPOLL
                 </Button>
                 <Button variant="outlined" color="inherit" onClick={() => handleLogout()}>
@@ -127,7 +127,7 @@ const Dash = () => {
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "2em"}}>
-                <Pollsearch {...{cookie: person.cookie}}/>
+                <Pollsearch {...{cookie: person.cookie, personId: person.personId}}/>
                 {pt}
             </Container>
         </div>
