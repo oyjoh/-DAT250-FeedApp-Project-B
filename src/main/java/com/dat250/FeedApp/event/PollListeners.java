@@ -2,11 +2,9 @@ package com.dat250.FeedApp.event;
 
 import com.dat250.FeedApp.event.pollEvents.PollEvent;
 import com.dat250.FeedApp.model.Poll;
-import com.dat250.FeedApp.model.Value;
 import com.dat250.FeedApp.mqtt.controller.MqttController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.context.event.EventListener;

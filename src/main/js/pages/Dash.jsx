@@ -12,7 +12,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
 import axios from "axios";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
@@ -26,41 +25,40 @@ const useStyles = makeStyles({
 
 const Dash = () => {
 
-    const person = {
-        "createdAt": "2020-11-11T16:43:37.871+00:00",
-        "updatedAt": "2020-11-11T16:43:37.980+00:00",
-        "personId": 98,
-        "name": "ola1605113017326",
-        "email": "ola1605113017326@gmail.com",
-        "cookie": "bce716d4-a4a7-458a-9273-60b65c138e66",
-        "roles": [
-            "USER"
-        ],
-        "polls": [
-            104,
-            105,
-            106,
-            107
-        ],
-        "entries": [
-            118,
-            119,
-            120,
-            121,
-            122,
-            123,
-            124,
-            125,
-            126,
-            127
-        ],
-        "enabled": true,
-        "username": "98",
-        "admin": false,
-        "user": true
+    const [person, setPerson] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const getPerson = (cookie) => {
+        const config = {
+            method: 'get',
+            url: '/api/polls/',
+            headers: {
+                Authorization: 'Bearer ' + props.cookie,
+            }
+        };
+
+        return axios(config)
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            });
     }
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+
+            const result = await axios()
+            console.log(result);
+            setPollList(result);
+            setIsLoading(false);
+        };
+    })
+
     const classes = useStyles();
+
+    //TODO login set cookie, get person based on cookie here
+    useState()
 
     return (
         <div>
