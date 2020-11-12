@@ -17,6 +17,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import Polltable from "../components/Polltable.jsx";
 import Pollsearch from "../components/Pollsearch.jsx";
+import {Redirect} from "react-router-dom";
 
 const useStyles = makeStyles({
     table: {
@@ -28,6 +29,7 @@ const Dash = () => {
 
     const [person, setPerson] = useState({});
     const [loading, setLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
 
     const getPerson = async (cookie) => {
         const config = {
@@ -44,6 +46,25 @@ const Dash = () => {
                 return res.data;
             });
     }
+
+    const handleLogout = () => {
+        const config = {
+            method: 'get',
+            url: '/api/users/logout',
+            headers: {
+                Authorization: 'Bearer ' + person.cookie,
+            }
+        };
+        axios(config)
+            .then((res) => {
+                console.log(res);
+                setLoggedIn(false);
+
+            })
+            .catch((error) => {
+                alert("Error!\n" + error);
+            })
+    };
 
     const cookieValue = (cookieName) => document.cookie
         .split('; ')
@@ -65,6 +86,9 @@ const Dash = () => {
 
     const classes = useStyles();
 
+    if (!loggedIn) {
+        return <Redirect to="/login"/>;
+    }
     return (
         <div>
         <AppBar position="static">
@@ -74,6 +98,9 @@ const Dash = () => {
                 <Typography variant="h6" className={classes.title}>
                     User: {person.name}
                 </Typography>
+                <button onClick={() => handleLogout()}>
+                    Logout
+                </button>
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "7em"}}>
