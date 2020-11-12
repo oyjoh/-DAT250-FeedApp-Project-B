@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
+    textField:{
+        padding: theme.spacing(1),
+    },
 }));
 
 function PollCreatorComponent(props) {
@@ -103,6 +106,7 @@ function PollCreatorComponent(props) {
                 <div style={modalStyle} className={classes.paper}>
                     <form className={classes.form} onSubmit={handleSubmit} noValidate>
                         <TextField
+                            className={classes.textField}
                             variant="outlined"
                             margin="normal"
                             required
@@ -114,13 +118,15 @@ function PollCreatorComponent(props) {
                             autoComplete="email"
                             autoFocus
                         />
+                        <br/>
                         <TextField
+                            className={classes.textField}
                             onChange={handleDateTimeChange}
                             variant="outlined"
                             fullWidth
                             id="datetime-local"
                             name="date"
-                            label="Next appointment"
+                            label="End time"
                             type="datetime-local"
                             InputLabelProps={{
                                 shrink: true,
@@ -130,6 +136,7 @@ function PollCreatorComponent(props) {
                         <FormControlLabel
                             control={<Switch
                                 checked={form.isPublic}
+                                color="primary"
                                 onChange={handleSwitchChange}
                                 name="isPublic"
                             />}
