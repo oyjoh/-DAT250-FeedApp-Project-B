@@ -57,6 +57,7 @@ const Polltable = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if(props.polls === undefined) return;
             setIsLoading(true);
             let newPollList = [];
             props.polls.forEach(pollId => {
@@ -78,6 +79,7 @@ const Polltable = (props) => {
 
 
     const formatDate = (dateString) => {
+        if(dateString === null) return "";
         const date = new Date(dateString);
         return date.toLocaleString();
     }
@@ -100,7 +102,7 @@ const Polltable = (props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {pollList.map((poll) => (
+                            {pollList === undefined ? <div/> : pollList.map((poll) => (
                                 <TableRow style={{background :rowColor(poll.yes, poll.no)}} key={poll.pollId}>
                                     <TableCell component="th" scope="row">{poll.joinKey}</TableCell>
                                     <TableCell align="right">{poll.yes}</TableCell>
@@ -116,7 +118,7 @@ const Polltable = (props) => {
                                     <TableCell align="right">{poll.summary}</TableCell>
                                     <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
-                                        <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>
+                                        {(poll.ended ? <div/> : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>)}
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -40,7 +40,6 @@ function VoteButtonComponent(props) {
     };
 
     const sendVote = (vote) => {
-        console.log(vote)
         const data = JSON.stringify(
             {"value": vote, "number": 1}
             );
@@ -57,6 +56,7 @@ function VoteButtonComponent(props) {
 
         axios(config)
             .then((res) => {
+                if(res.data === "") alert("You have already voted on this poll!");
                 console.log(res);
             })
             .catch((error) => {
@@ -65,13 +65,12 @@ function VoteButtonComponent(props) {
     };
 
     const handleClick = (value) => {
-        console.log(value);
         sendVote(value);
     }
 
     return (
         <div>
-        <Button disableElevation variant="outlined" onClick={handleOpen}>Go to Poll</Button>
+        <Button disableElevation variant="outlined" onClick={handleOpen}>Vote on Poll</Button>
             <Modal
                 open={open}
                 onClose={handleClose}

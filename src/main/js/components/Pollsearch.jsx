@@ -14,7 +14,6 @@ const Pollsearch = (props) => {
     const classes = useStyles();
 
     const [searchVal, setSearchVal] = useState("");
-
     const [poll, setPoll] = useState({});
 
     const handleChange = (event) => {
@@ -23,8 +22,6 @@ const Pollsearch = (props) => {
 
         setSearchVal(value);
     }
-
-    const [pollSet, setPollSet] = useState(false);
 
     const handleSubmit = (value) => {
         axios({
@@ -39,12 +36,10 @@ const Pollsearch = (props) => {
                 return res.data
             })
             .then(newPoll => {
-                setPollSet(true);
                 setPoll(newPoll);
             })
             .catch((error) => {
-                if (error.response.status === 401)
-                    alert("Error");
+                return error;
             });
     }
 
@@ -56,7 +51,7 @@ const Pollsearch = (props) => {
     }
 
     const votePoll = checkIfEqual(poll.joinKey, searchVal) ?
-            <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/> :
+        (poll.ended ? <div/> : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>) :
             <div/>;
 
     return (
