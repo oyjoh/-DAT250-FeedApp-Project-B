@@ -5,11 +5,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
-import Checkbox from "@material-ui/core/Checkbox";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, {useState} from "react";
 import axios from "axios";
@@ -55,7 +52,7 @@ function Register() {
     const classes = useStyles();
 
     const [form, setForm] = useState({
-        "username": "testPerson1",
+        "username": "",
         "email": "",
         "password": "",
     });
@@ -165,7 +162,6 @@ function Register() {
             </Container>
         );
     }
-
 }
 
 export default Register;

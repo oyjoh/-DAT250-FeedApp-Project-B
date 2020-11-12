@@ -11,6 +11,9 @@ import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
 import axios from "axios";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {lighten} from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles({
     table: {
@@ -21,6 +24,17 @@ const useStyles = makeStyles({
 const Polltable = (props) => {
 
     const classes = useStyles();
+
+    const BorderLinearProgress = withStyles({
+        root: {
+            height: 10,
+            backgroundColor: '#ff6c5c',
+        },
+        bar: {
+            backgroundColor: '#5c9eff',
+        },
+    })(LinearProgress);
+
 
     const [pollList, setPollList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -54,14 +68,18 @@ const Polltable = (props) => {
             setIsLoading(false);
         };
         console.log(pollList);
-        console.log("hey");
         fetchData();
 
     },[]);
 
     const distrbution = (yes, no) => {
-        if(yes === no) return "50%";
-        return (yes/(no+yes)*100).toFixed(0) + "%";
+        if(yes === no) return 50;
+        return (yes/(no+yes)*100);
+    }
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleString();
     }
 
     return (
@@ -84,9 +102,16 @@ const Polltable = (props) => {
                                     <TableCell component="th" scope="row">{poll.joinKey}</TableCell>
                                     <TableCell align="right">{poll.yes}</TableCell>
                                     <TableCell align="right">{poll.no}</TableCell>
-                                    <TableCell align="right">{distrbution(poll.yes, poll.no)}</TableCell>
+                                    <TableCell align="right">
+                                        <BorderLinearProgress
+                                            className={classes.margin}
+                                            variant="determinate"
+                                            color="primary"
+                                            value={distrbution(poll.yes, poll.no)}
+                                        />
+                                    </TableCell>
                                     <TableCell align="right">{poll.summary}</TableCell>
-                                    <TableCell align="right">{poll.endAt}</TableCell>
+                                    <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
                                         <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId}}/>
                                     </TableCell>
