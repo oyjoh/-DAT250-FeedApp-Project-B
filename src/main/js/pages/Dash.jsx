@@ -18,6 +18,7 @@ import "regenerator-runtime/runtime";
 import Polltable from "../components/Polltable.jsx";
 import Pollsearch from "../components/Pollsearch.jsx";
 import {Redirect} from "react-router-dom";
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
     table: {
@@ -95,12 +96,12 @@ const Dash = () => {
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>
+                <Typography variant="h6" className={classes.title} style={{ flex: 1 }}>
                     User: {person.name}
                 </Typography>
-                <button onClick={() => handleLogout()}>
+                <Button variant="outlined" color="inherit" onClick={() => handleLogout()}>
                     Logout
-                </button>
+                </Button>
             </Toolbar>
         </AppBar>
             <Container style={{paddingTop: "7em"}}>
