@@ -49,12 +49,13 @@ public class EntryService {
         }).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
     }
 
-    public Entry createNewEntry(Long personId, Long pollId, Entry entry) {
+    public Entry createNewEntry(Long personId, Long pollId, Entry entry) throws Exception {
         Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("PersonId: " + personId + " not found"));
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new ResourceNotFoundException("PollId: " + pollId + " not found"));
+        if(poll.getEnded()) throw new Exception("poll has ended");
         for(Entry currEntry : poll.getEntries()){
             if(currEntry.getPerson() == person){
-                return null;
+                throw new Exception("person has already voted on poll");
             }
         }
         return entryRepository.save(Entry.from(entry, person, poll));

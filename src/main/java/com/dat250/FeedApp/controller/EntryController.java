@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class EntryController {
 
     @PostMapping("/polls/{pollId}/entry")
     @ResponseStatus(HttpStatus.CREATED)
-    public Entry createNewEntry(@RequestParam Long personId, @PathVariable Long pollId, @Validated @RequestBody Entry entry) {
+    public Serializable createNewEntry(@RequestParam Long personId, @PathVariable Long pollId, @Validated @RequestBody Entry entry) throws Exception {
         return entryService.createNewEntry(personId, pollId, entry);
     }
 
