@@ -30,6 +30,11 @@ public class PersonController {
         this.personService = personService;
     }
 
+    @GetMapping("/people/current")
+    public Person getCurrentUser(@AuthenticationPrincipal final Person user) {
+        return user;
+    }
+
     @GetMapping("/people")
     public List<Person> getAllPersons() {
         return personService.getAllPersons();
