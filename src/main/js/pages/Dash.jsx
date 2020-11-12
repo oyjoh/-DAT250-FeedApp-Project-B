@@ -92,8 +92,6 @@ const Dash = () => {
         <div>
         <AppBar position="static">
             <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                </IconButton>
                 <Typography variant="h6" className={classes.title} style={{ flex: 1 }}>
                     User: {person.name}
                 </Typography>
