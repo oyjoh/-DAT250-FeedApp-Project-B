@@ -86,7 +86,7 @@ const Polltable = (props) => {
     }
 
 
-    const rowColor = (yes, no) => yes === no ? "" : yes > no ? lighten('#5c9eff', 0.5) : lighten('#ff6c5c', 0.5) ;
+    const rowColor = (ended) => ended ? lighten('#ff6c5c', 0.8) : "" ;
 
     return (
                 <TableContainer component={Paper}>
@@ -104,7 +104,7 @@ const Polltable = (props) => {
                         </TableHead>
                         <TableBody>
                             {pollList === undefined ? <div/> : pollList.map((poll) => (
-                                <TableRow style={{background :rowColor(poll.yes, poll.no)}} key={poll.pollId}>
+                                <TableRow style={{background :rowColor(poll.ended)}} key={poll.pollId}>
                                     <TableCell component="th" scope="row">{poll.joinKey}</TableCell>
                                     <TableCell align="right">{poll.yes}</TableCell>
                                     <TableCell align="right">{poll.no}</TableCell>
@@ -129,3 +129,4 @@ const Polltable = (props) => {
     );
 }
 export default Polltable;
+

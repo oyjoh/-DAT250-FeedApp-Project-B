@@ -5,6 +5,10 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import axios from "axios";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import TextField from "@material-ui/core/TextField";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import Switch from "@material-ui/core/Switch";
 
 function getModalStyle() {
     const top = 50;
@@ -35,7 +39,8 @@ function PollCreatorComponent(props) {
 
     const [form, setForm] = useState({
         "summary": "",
-        "isPublic": true
+        "isPublic": true,
+        "endAt": "",
     });
 
     const handleOpen = () => {
@@ -46,8 +51,28 @@ function PollCreatorComponent(props) {
         setOpen(false);
     };
 
+    const handleSummaryChange = (event) => {
+        const value = event.target.value;
+        setForm({...form, summary: value});
+    }
+
+    const handleDateTimeChange = (event) => {
+        const value = event.target.value;
+        const date = new Date(value);
+        console.log(date);
+        setForm({...form, endAt: date.toISOString()});
+    }
+
+    const handleSwitchChange = (event) => {
+        const value = event.target.value;
+        console.log(value);
+        setForm({...form, isPublic: !form.isPublic});
+    }
+
     const handleSubmit = (event) => {
         console.log("SUBMITTED");
+        const data = JSON.stringify(form);
+        console.log(data);
         const config = {
             method: 'post',
             url: '/api/people/' + props.personId + '/polls/',
@@ -55,10 +80,7 @@ function PollCreatorComponent(props) {
                 'Content-Type' : 'application/json',
                 Authorization: 'Bearer ' + props.cookie,
             },
-            data: JSON.stringify({
-                "summary": form.summary,
-                "isPublic": true,
-            })
+            data: data
         };
         axios(config)
             .then((res) => {
@@ -67,18 +89,6 @@ function PollCreatorComponent(props) {
             .catch((error) => {
                 alert(error)
             });
-    };
-
-    const handleChange = (event) => {
-        const target = event.target;
-        const name = target.name;
-        const value = target.value;
-        console.log(value);
-
-        setForm({
-            ...form,
-            [name]: value,
-        });
     };
 
     return (
@@ -91,11 +101,12 @@ function PollCreatorComponent(props) {
                 aria-describedby="simple-modal-description"
             >
                 <div style={modalStyle} className={classes.paper}>
-                    <form className={classes.form} onSubmit={handleSubmit} onChange={handleChange} noValidate>
+                    <form className={classes.form} onSubmit={handleSubmit} noValidate>
                         <TextField
                             variant="outlined"
                             margin="normal"
                             required
+                            onChange={handleSummaryChange}
                             fullWidth
                             id="summary"
                             label="Enter a short summary"
@@ -103,16 +114,37 @@ function PollCreatorComponent(props) {
                             autoComplete="email"
                             autoFocus
                         />
+                        <TextField
+                            onChange={handleDateTimeChange}
+                            variant="outlined"
+                            fullWidth
+                            id="datetime-local"
+                            name="date"
+                            label="Next appointment"
+                            type="datetime-local"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <br/>
+                        <FormControlLabel
+                            control={<Switch
+                                checked={form.isPublic}
+                                onChange={handleSwitchChange}
+                                name="isPublic"
+                            />}
+                            label="Public"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Submit
+                        </Button>
                     </form>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Submit
-                    </Button>
                 </div>
             </Modal>
         </div>
