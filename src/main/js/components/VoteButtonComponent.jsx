@@ -71,7 +71,7 @@ function VoteButtonComponent(props) {
 
     return (
         <div>
-        <Button color="primary"  disableElevation variant="contained" onClick={handleOpen}>Go to Poll</Button>
+        <Button disableElevation variant="outlined" onClick={handleOpen}>Go to Poll</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -82,7 +82,7 @@ function VoteButtonComponent(props) {
                 <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>{props.summary}</h2>
                 <div style={{textAlign: "-webkit-center"}}>
                     <p>Poll code: {props.pollCode}</p>
-                    <ButtonGroup disableElevation variant="outlined" fullWidth size="large">
+                    <ButtonGroup disableElevation variant="contained" fullWidth size="large">
                         <Button onClick={() => {handleClick("YES"); handleClose()}} color="primary">YES</Button>
                         <Button onClick={() => {handleClick("NO"); handleClose()}} color="secondary">NO</Button>
                     </ButtonGroup>

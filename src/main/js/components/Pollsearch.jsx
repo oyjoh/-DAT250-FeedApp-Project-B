@@ -48,9 +48,16 @@ const Pollsearch = (props) => {
             });
     }
 
-    const votePoll = !pollSet
-        ? <p>---</p>
-        : <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>;
+    const checkIfEqual = (pollKey, currVal) => {
+        if(pollKey === undefined) {
+            return false;
+        }
+        return pollKey.toString() === currVal;
+    }
+
+    const votePoll = checkIfEqual(poll.joinKey, searchVal) ?
+            <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/> :
+            <div/>;
 
     return (
         <div style={{padding:"20px"}}>
