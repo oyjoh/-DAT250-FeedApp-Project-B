@@ -1,4 +1,3 @@
-import Container from "@material-ui/core/Container";
 import React, {useEffect, useState} from "react";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
@@ -8,10 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
 import axios from "axios";
 import "core-js/stable";
@@ -50,24 +45,23 @@ const Polltable = (props) => {
         const fetchData = async () => {
             setIsLoading(true);
             let newPollList = [];
-            if(props.polls !== undefined){
-                props.polls.forEach(pollId => {
-                    newPollList = newPollList.concat(getPoll(pollId));
-                })
-            }
+            props.polls.forEach(pollId => {
+                newPollList = newPollList.concat(getPoll(pollId));
+            })
             const result = await Promise.all(newPollList);
             console.log(result);
             setPollList(result);
             setIsLoading(false);
         };
         console.log(pollList);
+        console.log("hey");
         fetchData();
 
     },[]);
 
     const distrbution = (yes, no) => {
         if(yes === no) return "50%";
-        return (yes/(no+yes)/100).toFixed(2) + "%";
+        return (yes/(no+yes)*100).toFixed(0) + "%";
     }
 
     return (
@@ -94,7 +88,7 @@ const Polltable = (props) => {
                                     <TableCell align="right">{poll.summary}</TableCell>
                                     <TableCell align="right">{poll.endAt}</TableCell>
                                     <TableCell align="right">
-                                        <VoteButtonComponent pollcode={poll.joinKey}/>
+                                        <VoteButtonComponent {...{pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId}}/>
                                     </TableCell>
                                 </TableRow>
                             ))}

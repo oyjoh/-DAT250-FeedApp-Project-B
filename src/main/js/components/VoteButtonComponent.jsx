@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import axios from "axios";
 
 function getModalStyle() {
     const top = 50;
@@ -39,6 +40,37 @@ function VoteButtonComponent(props) {
         setOpen(false);
     };
 
+    const sendVote = (vote) => {
+        console.log(vote)
+        const data = JSON.stringify(
+            {"value": vote, "number": 1}
+            );
+        console.log("VOTEDATA", data);
+
+        const config = {
+            method: 'post',
+            url: '/api/polls/' + props.pollId + '/entry?personId=' + props.personId,
+            headers: {
+                'Authorization': 'Bearer ' + props.cookie,
+                'Content-Type': 'application/json',
+            },
+            data: data
+        };
+
+        axios(config)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((error) => {
+                alert("Error!\n" + error);
+            })
+    };
+
+    const handleClick = (value) => {
+        console.log(value);
+        sendVote(value);
+    }
+
     return (
         <div>
         <Button style={{backgroundColor: "#2d9bb5", color: "white"}} variant="contained" onClick={handleOpen}>Go to Poll</Button>
@@ -51,9 +83,9 @@ function VoteButtonComponent(props) {
                 <div style={modalStyle} className={classes.paper}>
                 <h2 id="simple-modal-title" style={{textAlign: "-webkit-center"}}>Vote</h2>
                 <div style={{textAlign: "-webkit-center"}}>
-                    <p>Pollcode: {props.pollcode}</p>
-                    <Button size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>YES</Button>
-                    <Button size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>NO</Button>
+                    <p>Poll code: {props.pollCode}</p>
+                    <Button onClick={() => handleClick("YES")} size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>YES</Button>
+                    <Button onClick={() => handleClick("NO")} size="large" style={{backgroundColor: "#2d9bb5", color: "white", padding: "1em", margin: "0.5em"}}>NO</Button>
                 </div>
         </div>
             </Modal>

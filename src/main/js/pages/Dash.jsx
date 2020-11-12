@@ -89,6 +89,11 @@ const Dash = () => {
     if (!loggedIn) {
         return <Redirect to="/login"/>;
     }
+
+    const pt = loading
+        ? <p>loading</p>
+        : <Polltable {...{polls: person.polls, cookie: person.cookie, personId: person.personId}}/>;
+
     return (
         <div>
         <AppBar position="static">
@@ -105,7 +110,7 @@ const Dash = () => {
         </AppBar>
             <Container style={{paddingTop: "7em"}}>
                 <Pollsearch {...{cookie: person.cookie}}/>
-                <Polltable {...{polls: person.polls, cookie: person.cookie}}/>
+                {pt}
             </Container>
         </div>
     );
