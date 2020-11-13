@@ -55,7 +55,7 @@ const EndButton = (props) => {
 
     const btn = props.poll.ended ?
         <Button color="primary" disableElevation variant="contained" onClick={handleRestart}>RESTART</Button> :
-        <Button color="primary" disableElevation variant="contained" onClick={handleEnd}>END</Button>;
+        <Button color="secondary" disableElevation variant="contained" onClick={handleEnd}>END</Button>;
 
     return (
         <div>

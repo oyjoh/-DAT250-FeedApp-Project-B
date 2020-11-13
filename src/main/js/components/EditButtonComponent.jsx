@@ -96,7 +96,7 @@ function PollCreatorComponent(props) {
 
     return (
         <div>
-            <Button color="primary"  disableElevation variant="contained" onClick={handleOpen}>Edit</Button>
+            <Button disableElevation variant="outlined" onClick={handleOpen}>Edit</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
