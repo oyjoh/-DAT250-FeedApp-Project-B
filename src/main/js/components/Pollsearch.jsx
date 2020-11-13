@@ -52,10 +52,12 @@ const Pollsearch = (props) => {
         }
         return pollKey.toString() === currVal;
     }
-    const distrbution = (yes, no) => {
+    const distribution = (yes, no) => {
         if(yes === no) return 50;
-        return (yes/(no+yes)*100);
+        return yes/(no+yes)*100;
     }
+
+
     const BorderLinearProgress = withStyles({
         root: {
             height: 10,
@@ -70,7 +72,7 @@ const Pollsearch = (props) => {
         className={classes.margin}
         variant="determinate"
         color="primary"
-        value={distrbution(poll.yes, poll.no)}/>;
+        value={distribution(poll.yes, poll.no)}/>;
 
     const votePoll = checkIfEqual(poll.joinKey, searchVal) ?
         poll.ended ?
@@ -85,6 +87,7 @@ const Pollsearch = (props) => {
                 <br/>
                 {distShow}
                 <p>yes: {poll.yes}  |  no: {poll.no}</p>
+                <p>{poll.summary}</p>
                 <VoteButtonComponent {...{action: handleSubmit, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>
             </div>
         :

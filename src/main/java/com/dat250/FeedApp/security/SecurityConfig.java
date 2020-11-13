@@ -33,6 +33,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     // URLS without any form of security
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/"),
+            new AntPathRequestMatcher("/favicon.png"),
+            new AntPathRequestMatcher("/favicon.ico"),
             new AntPathRequestMatcher("/login"),
             new AntPathRequestMatcher("/register"),
             new AntPathRequestMatcher("/dash"),
