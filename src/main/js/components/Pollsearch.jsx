@@ -78,7 +78,7 @@ const Pollsearch = (props) => {
                 <br/>
                 {distShow}
                 <p>yes: {poll.yes}  |  no: {poll.no}</p>
-                <p>This poll has ended.</p>
+                <p>{poll.summary}</p>
             </div>
             :
             <div>
