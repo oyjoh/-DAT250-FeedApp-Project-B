@@ -84,6 +84,8 @@ public class PollService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Person: " + person.getName() + " is not the poll Owner");
         if (pollRequest.getSummary() != null) poll.setSummary(pollRequest.getSummary());
         if (pollRequest.getIsPublic() != null) poll.setIsPublic(pollRequest.getIsPublic());
+        poll.setEndAt(pollRequest.getEndAt());
+        if (pollRequest.getEnded() != null) poll.setEnded(pollRequest.getEnded());
         PollUpdatedEvent pollUpdatedEvent = new PollUpdatedEvent(poll);
         applicationEventPublisher.publishEvent(pollUpdatedEvent);
         return pollRepository.save(poll);

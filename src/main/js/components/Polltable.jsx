@@ -8,12 +8,14 @@ import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import VoteButtonComponent from "../components/VoteButtonComponent.jsx";
+import EditButtonComponent from "../components/EditButtonComponent.jsx";
 import axios from "axios";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {lighten} from "@material-ui/core";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import EndButton from "../components/EndButton.jsx";
 
 const useStyles = makeStyles({
     table: {
@@ -28,6 +30,7 @@ const Polltable = (props) => {
     const BorderLinearProgress = withStyles({
         root: {
             height: 10,
+            width: "250px",
             backgroundColor: '#ff6c5c',
         },
         bar: {
@@ -99,7 +102,9 @@ const Polltable = (props) => {
                                 <TableCell align="right"><b>Distribution</b></TableCell>
                                 <TableCell align="right"><b>Poll Description</b></TableCell>
                                 <TableCell align="right"><b>End Date</b></TableCell>
-                                <TableCell align="right"></TableCell>
+                                <TableCell align="right"> </TableCell>
+                                <TableCell align="right"> </TableCell>
+                                <TableCell align="right"> </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -120,6 +125,12 @@ const Polltable = (props) => {
                                     <TableCell align="right">{formatDate(poll.endAt)}</TableCell>
                                     <TableCell align="right">
                                         {(poll.ended ? <div/> : <VoteButtonComponent {...{action: fetchData, pollCode: poll.joinKey, cookie: props.cookie, personId: props.personId, pollId: poll.pollId, summary: poll.summary}}/>)}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <EditButtonComponent {...{action: fetchData, poll: poll, cookie: props.cookie, personId: props.personId}}/>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <EndButton {...{cookie: props.cookie, personId: props.personId, poll: poll}}/>
                                     </TableCell>
                                 </TableRow>
                             ))}
